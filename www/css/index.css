@@ -44,9 +44,9 @@ body {
   width:100%;
   padding:0;
   margin:0;
-  -webkit-text-size-adjust:none;
   font-size: 16px;
   font-family: 'Montserrat', sans-serif;
+  background: black;
 }
 
 h1 {
@@ -69,6 +69,7 @@ h1 {
 
 .event.listening {
     display:block;
+    text-align: center;
 }
 
 .event.received {
@@ -77,5 +78,32 @@ h1 {
 
 .login {
   font-size: 30px;
-    text-align: center;
+  text-align: center;
+}
+
+input#UserPassword, input#UserUsername {
+  width: 50%;
+  padding: 10px;
+}
+button#login {
+    border: 0px;
+    width: 437px !important;
+    height: 46px !important;
+    background-color: #c4942e;
+    -webkit-appearance: none;
+    -webkit-border-radius: 0px;
+    font-size: 13px;
+    font-family: 'Montserrat', sans-serif;
+    text-decoration: none;
+    font-weight: 700;
+    padding-left: 15px;
+    color: #fff;
+    letter-spacing: 1px;
+    margin: 0 auto;
+    line-height: 23px !important;
+}
+#status {
+  color: red;
+  font-weight: bold;
+  font-size: 20px;
 }

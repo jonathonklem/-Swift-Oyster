@@ -36,6 +36,7 @@
             <div class="event listening">Connecting to Device</div>
             <div class="event received">
                 <div class="login">
+                  <div id="status"></div>
                   <span class="script">The sun never sets on the Pawnpire</span>
                   <form action="http://pawnpire.com/users/login" id="UserLoginForm" method="post" accept-charset="utf-8">
                     <div style="display:none;"><input type="hidden" name="_method" value="POST"></div>
@@ -46,15 +47,27 @@
                      <div class="loginPad"></div>
                     <div class="input password required"><input name="data[User][password]" class="loginDes" placeholder="Password" type="password" id="UserPassword" required="required" autocomplete="off"></div>
                     <br><div class="loginPad"></div>
-                    <button class="buttonDes">LOGIN</button>
+                    <button class="buttonDes" id="login">LOGIN</button>
                   </form>
                 </div>
             </div>
         </div>
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
+        <script type="text/javascript" src="js/jquery.js"></script>
         <script type="text/javascript">
             app.initialize();
+            $(document).ready(function() {
+              $('#login').click(function() {
+                $.post('https://pawnpire.com/assistant/login', $('#UserLoginForm').serialize(), function(data) {
+                  if (data.response == 'success') {
+                    $('#status').html("Logged in successfully");
+                  } else { 
+                    $('#status').html("Incorrect username/password combo");
+                  }
+                }, 'json');
+              });
+            });
         </script>
     </body>
 </html>
