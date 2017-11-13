@@ -33,8 +33,24 @@
         <div class="app">
             <h1>Pawnpire Assistant</h1>
             <div id="deviceready" class="blink">
-                <p class="event listening">Connecting to Device</p>
-                <p class="event received">Please log in</p>
+                <div class="event listening">Connecting to Device</div>
+                <div class="event received">
+                    <div class="login">
+                      <img src="https://www.pawnpire.com/img/Pawn-Coat-Of-Arms-final.png" class="armorium">
+                      <span class="script">The sun never sets on the Pawnpire</span>
+                      <form action="/users/login" id="UserLoginForm" method="post" accept-charset="utf-8">
+                        <div style="display:none;"><input type="hidden" name="_method" value="POST"></div>
+                        <div class="input text required">
+                          <input name="data[User][username]" class="loginDes" placeholder="Username" maxlength="50" type="text" id="UserUsername" required="required" autocomplete="off">
+                        </div>    
+                        <br>
+                        <div class="loginPad"></div>
+                        <div class="input password required"><input name="data[User][password]" class="loginDes" placeholder="Password" type="password" id="UserPassword" required="required" autocomplete="off"></div>
+                        <br><div class="loginPad"></div>
+                        <button class="buttonDes">LOGIN</button>
+                      </form>
+                    </div>
+                </div>
             </div>
         </div>
         <script type="text/javascript" src="cordova.js"></script>
