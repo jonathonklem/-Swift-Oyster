@@ -47,6 +47,7 @@
     <!-- Core plugins -->
     <plugin name="cordova-plugin-battery-status" />
     <plugin name="cordova-plugin-camera" />
+    <plugin name="cordova-plugin-barcodescanne" />
     <plugin name="cordova-plugin-media-capture" />
     <plugin name="cordova-plugin-console" />
     <plugin name="cordova-plugin-contacts" />
@@ -64,7 +65,12 @@
 
     <!-- Third party plugins -->
     <!-- A list of available plugins are available at https://build.phonegap.com/plugins -->
-   <plugin name="com.phonegap.plugins.barcodescanner" />
+
+    <config-file target="AndroidManifest.xml" parent="/*" mode="merge">
+      <uses-permission android:name="android.permission.CAMERA" />
+      <uses-feature android:name="android.hardware.camera" />
+      <uses-feature android:name="android.hardware.camera.autofocus" />
+    </config-file>
 
     <!-- Define app icon for each platform. -->
     <icon src="icon.png" />
