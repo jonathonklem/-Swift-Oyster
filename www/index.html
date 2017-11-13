@@ -33,10 +33,9 @@
         <h1>Pawnpire Assistant</h1>
         <div id="deviceready" class="blink">
             <img src="https://www.pawnpire.com/img/Pawn-Coat-Of-Arms-final.png" class="armorium">
-            <div class="event listening">Connecting to Device</div>
-            <div class="event received">
+            <div id="status"></div>
+            <div class="screen login">
                 <div class="login">
-                  <div id="status"></div>
                   <span class="script">The sun never sets on the Pawnpire</span>
                   <form action="" id="UserLoginForm" method="post" accept-charset="utf-8">
                     <div style="display:none;"><input type="hidden" name="_method" value="POST"></div>
@@ -51,6 +50,33 @@
                   </form>
                 </div>
             </div>
+            <div class="screen menu">
+              <h2>Choose Task</h2>
+              <a class="button go_to" id="warehouse_checkin">Warehouse Checkin</a>
+            </div>
+            <div class="screen warehouse_checkin">
+              <h2>Warehouse Checkin</h2>
+
+              <form id='warehouseCheckinForm' action='' method='post'>
+                <div class="input_block">
+                  <label>Disposition</label>
+                  <select name="data[InventoryItem][warehouse_disposition]" class="disposition">
+                    <option>Choose</option>
+                    <option value="Ready to List">Ready to List</option>
+                    <option value="Medical">Medical</option>
+                    <option value="Return to Retail">Return to Retail</option>
+                    <option value="In House">In House</option>
+                    <option value="Relist">Relist</option>
+                    <option value="Sports Needs Authentication">Sports Needs Authentication</option>
+                  </select>
+                </div>
+
+                <div class="input_block">
+                  <label>Serial</label>
+                  <input name="data[InventoryItem][id]" type="text" class="serial">
+                </div>
+              </form>
+            </div>
         </div>
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
@@ -58,17 +84,63 @@
         <script type="text/javascript">
             app.initialize();
             $(document).ready(function() {
+              window.stage = "login";
+              transition(window.stage);
+
               $('#login').click(function(e) {
                 e.preventDefault();
+
                 $.post('https://www.pawnpire.com/assistant/login', $('#UserLoginForm').serialize(), function(data) {
                   if (data.response == 'success') {
+
                     $('#status').html("Logged in successfully");
+
+                    // store credentials
+                    localStorage.setItem('credentials', $('#UserLoginForm').serialize());
+
+                    setTimeout(function() {
+                      transition('menu');
+                    }, 500);
+
                   } else { 
                     $('#status').html("Incorrect username/password combo");
                   }
                 }, 'json');
               });
+
+              $('.go_to').click(function(e) {
+                e.preventDefault();
+                transition($(this).attr('id'));
+              });
+
+              $('#warehouseCheckinForm').on('submit', function(e) {
+                e.preventDefault();
+                return false;
+              });
+
+              $('input[name="data[InventoryItem][id]"]').keyup(function(event){
+                event.preventDefault();
+
+                if(event.keyCode == 13){
+                  event.preventDefault();
+                  $.post('https://www.pawnpire.com/assistant/warehouse_checkin', localStorage.getItem('credentials') + '&' + $('#warehouseCheckinForm').serialize(), function(data) {
+                    if (data.response == 'success') {
+                      $('#status').html($('input[name="data[InventoryItem][id]"]').val() + ' checked in');
+                      $('#warehouseCheckinForm')[0].reset();
+                    } else {
+                      $('#status').html('An error occured');
+                    }
+                  }, 'json');
+                }
+              });
+
             });
+
+            function transition(stage) {
+              $('.screen').hide();
+              $('.' + stage).show();
+              $('#status').html('');
+            }
         </script>
     </body>
 </html>
