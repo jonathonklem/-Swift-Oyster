@@ -118,6 +118,14 @@
                 return false;
               });
 
+              $('input[name="data[InventoryItem][id]"]').click(function() {
+                cordova.plugins.barcodeScanner.scan(
+                  function (result) {
+                    $('input[name="data[InventoryItem][id]"]').val(result.text);
+                  }
+                );
+              });
+
               $('input[name="data[InventoryItem][id]"]').keyup(function(event){
                 event.preventDefault();
 
