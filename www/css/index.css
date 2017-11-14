@@ -150,3 +150,6 @@ input.serial {
     width: 66%;
     font-size: 45px;
 }
+div#enterChildInfo, #getParent {
+  text-align: center;
+}
