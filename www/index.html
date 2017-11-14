@@ -34,6 +34,7 @@
         <div id="deviceready" class="blink">
             <img src="https://www.pawnpire.com/img/Pawn-Coat-Of-Arms-final.png" class="armorium">
             <div id="status"></div>
+            <a class="button go_to" id="menu">Go Back</a>
             <div class="screen login">
                 <div class="login">
                   <span class="script">The sun never sets on the Pawnpire</span>
@@ -53,7 +54,15 @@
             <div class="screen menu">
               <h2>Choose Task</h2>
               <a class="button go_to" id="warehouse_checkin">Warehouse Checkin</a><br><br>
-              <a class="button go_to" id="relist">Relist</a>
+              <a class="button go_to" id="relist">Relist</a><br><br>
+              <a class="button go_to" id="checkout">Checkout</a>
+            </div>
+            <div class="screen checkout">
+              <h2>Checkout</h2>
+              <form id="checkoutForm" onsubmit="return false">
+                <label>Serial</label>
+                <input name="data[InventoryItem][id]" type="text" class="serial">
+              </form>
             </div>
             <div class="screen relist">
               <h2>Relist</h2>
@@ -136,6 +145,24 @@
                 return false;
               });
 
+              $('#checkoutForm .serial').keyup(function(event){
+                if (event.keyCode == 13) {
+                  event.preventDefault();
+                  $.post('https://www.pawnpire.com/assistant/check_out', localStorage.getItem('credentials') + '&' + $('#checkoutForm').serialize(), function(data) {
+                    if (data.response == 'success') {
+                      $('#status').html($('#checkoutForm .serial').val() + ' checked out');
+                      $('#checkoutForm .serial').val('');
+                    } else {
+                      $('#status').html('An error has occurred');
+                    }
+
+                    setTimeout(function() {
+                      $('#status').html('');
+                    }, 1500);
+                  }, 'json');
+                } 
+              });
+
               $('#warehouseCheckinForm .serial').keyup(function(event){
                 if(event.keyCode == 13){
                   event.preventDefault();
@@ -172,8 +199,8 @@
                         }, 500)
                       } else {
                         $('#status').html('An error occurred');
-		      }
-                    });
+          }
+                    }, 'json');
                 }
               });
               
@@ -194,9 +221,16 @@
                 }
               });
 
+              $('#menu').hide();
             });
 
             function transition(stage) {
+              if (stage == 'menu') {
+                $('#menu').hide();
+              } else {
+                $('#menu').show();
+              }
+
               $('.screen').hide();
               $('.' + stage).show();
               $('#status').html('');
