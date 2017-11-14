@@ -66,7 +66,7 @@
               <div id='enterChildInfo'>
                 <form id='relistFormChild' action='' method='post'>
                   <label for="InventoryItemShelf">Child</label>
-                  <input name="data[InventoryItem][child_serial]" type="text" class="serial">
+                  <input name="data[InventoryItem][child_serial]" type="text" class="serial child">
                   <label for="InventoryItemShelf">Location</label>
                   <input name="data[InventoryItem][shelf]" type="text" class="serial">
                 </form>
@@ -137,8 +137,6 @@
               });
 
               $('#warehouseCheckinForm .serial').keyup(function(event){
-                event.preventDefault();
-
                 if(event.keyCode == 13){
                   event.preventDefault();
                   $.post('https://www.pawnpire.com/assistant/warehouse_checkin', localStorage.getItem('credentials') + '&' + $('#warehouseCheckinForm').serialize(), function(data) {
@@ -157,8 +155,7 @@
 
               $('#enterChildInfo').hide();
 
-              $('#relistFormChild .serial').keyup(function(event){
-                  event.preventDefault();
+              $('#relistFormChild .child').keyup(function(event){
                 if(event.keyCode == 13){
                   event.preventDefault();
                   $.post('https://www.pawnpire.com/assistant/relist_item', localStorage.getItem('credentials') + '&' + $('#relistFormParent').serialize() + '&' +    $('#relistFormChild').serialize(), function(data) {
@@ -173,13 +170,14 @@
                         $('#relistFormParent').show();   
                         $('#status').html('');        
                         }, 500)
-                      }
+                      } else {
+                        $('#status').html('An error occurred');
+		      }
                     });
                 }
               });
               
               $('#relistFormParent .serial').keyup(function(event){
-                  event.preventDefault();
                 if(event.keyCode == 13){
                   event.preventDefault();
                   $.post('https://www.pawnpire.com/assistant/get_parent', localStorage.getItem('credentials') + '&' + $('#relistFormParent').serialize(), function(data) {
