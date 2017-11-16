@@ -164,12 +164,12 @@
               });
 
               $('#warehouseCheckinForm .serial').keyup(function(event){
-                if(event.keyCode == 13){
+                if(event.keyCode == 13 || $('#warehouseCheckinForm .serial').val().length >= 6){
                   event.preventDefault();
                   $.post('https://www.pawnpire.com/assistant/warehouse_checkin', localStorage.getItem('credentials') + '&' + $('#warehouseCheckinForm').serialize(), function(data) {
                     if (data.response == 'success') {
                       $('#status').html($('#warehouseCheckinForm .serial').val() + ' checked in');
-                      $('input[name="data[InventoryItem][id]"]').val('');
+                      $('#warehouseCheckinForm .serial').val('');
                     } else {
                       $('#status').html('An error occured');
                       setTimeout(function() {
