@@ -146,7 +146,7 @@
               });
 
               $('#checkoutForm .serial').keyup(function(event){
-                if (event.keyCode == 13) {
+                if (event.keyCode == 13 || $('#checkoutForm .serial').val().length >= 6) {
                   event.preventDefault();
                   $.post('https://www.pawnpire.com/assistant/check_out', localStorage.getItem('credentials') + '&' + $('#checkoutForm').serialize(), function(data) {
                     if (data.response == 'success') {
