@@ -167,7 +167,7 @@
                 if($('#warehouseCheckinForm .serial').val().length >= 6){
                   event.preventDefault();
                   $.post('https://www.pawnpire.com/assistant/warehouse_checkin', localStorage.getItem('credentials') + '&' + $('#warehouseCheckinForm').serialize(), function(data) {
-                    if (data.response == 'success') {
+                    if (data.response == 'success' && $('#warehouseCheckinForm .serial').val()) {
                       $('#status').html('<span color="#00BB00">' + $('#warehouseCheckinForm .serial').val() + ' checked in</span>');
                       $('#warehouseCheckinForm .serial').val('');
                     } else {
