@@ -145,7 +145,7 @@ select.disposition {
     width: 66%;
     font-size: 40px;
 }
-input.serial {
+input.serial, #internal_notes {
     height: 40px;
     width: 66%;
     font-size: 45px;

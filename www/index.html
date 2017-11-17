@@ -93,9 +93,15 @@
                     <option value="Medical">Medical</option>
                     <option value="Return to Retail">Return to Retail</option>
                     <option value="In House">In House</option>
+                    <option value="Counterfeit">Counterfeit</option>
                     <option value="Relist">Relist</option>
                     <option value="Sports Needs Authentication">Sports Needs Authentication</option>
                   </select>
+                </div>
+
+                <div class="input_block internal_notes">
+                  <label>Internal Notes</label>
+                  <input type="text" name="data[InventoryItem][internal_notes]" id="internal_notes">
                 </div>
 
                 <div class="input_block">
@@ -111,6 +117,8 @@
         <script type="text/javascript">
             app.initialize();
             $(document).ready(function() {
+              $('.internal_notes').hide();
+
               window.stage = "login";
               transition(window.stage);
 
@@ -198,7 +206,7 @@
                         }, 500)
                       } else {
                         $('#status').html('An error occurred');
-          }
+                      }
                     }, 'json');
                 }
               });
@@ -221,6 +229,16 @@
               });
 
               $('#menu').hide();
+
+              // show description if warehouse inventory gets checked in for 'in house' use
+              $('.disposition').change(function() {
+              	if ($(this).val() == "In House") {
+              		$('.internal_notes').show();
+              	} else {
+              		$('.internal_notes').hide();
+              	}
+              })
+
             });
 
             function transition(stage) {
