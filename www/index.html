@@ -178,7 +178,7 @@
               });
 
               $('#warehouseCheckinForm .serial').keyup(function(event){
-                if( ($('#warehouseCheckinForm .serial').val().length >= 6 && !isNaN($('#checkoutForm .serial').val())) || event.keyCode == 13){
+                if( ($('#warehouseCheckinForm .serial').val().length >= 6 && !isNaN($('#warehouseCheckinForm .serial').val())) || event.keyCode == 13){
                   event.preventDefault();
                   $.post('https://www.pawnpire.com/assistant/warehouse_checkin', localStorage.getItem('credentials') + '&' + $('#warehouseCheckinForm').serialize(), function(data) {
                     if ($('#warehouseCheckinForm .serial').val()) { 
