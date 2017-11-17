@@ -74,10 +74,16 @@
               </div>
               <div id='enterChildInfo'>
                 <form id='relistFormChild' action='' method='post'>
-                  <label for="InventoryItemShelf">Child</label>
-                  <input name="data[InventoryItem][child_serial]" type="text" class="serial child">
+                  <label>Original Listing Price</label>
+                  <input name="data[Parent][InventoryItem][original_listing_price]" type="text" class="serial original_listing_price">
+                  <label>Listing Price</label>
+                  <input name="data[Parent][InventoryItem][listing_price]" type="text" class="serial listing_price">
+                  <label>Rock Bottom</label>
+                  <input name="data[Parent][InventoryItem][rock_bottom]" type="text" class="serial rock_bottom">
                   <label for="InventoryItemShelf">Location</label>
                   <input name="data[InventoryItem][shelf]" type="text" class="serial">
+                  <label for="InventoryItemShelf">Child</label>
+                  <input name="data[InventoryItem][child_serial]" type="text" class="serial child">
                 </form>
               </div>
             </div>
@@ -216,6 +222,9 @@
                   event.preventDefault();
                   $.post('https://www.pawnpire.com/assistant/get_parent', localStorage.getItem('credentials') + '&' + $('#relistFormParent').serialize(), function(data) {
                     if (data.response == 'success') {
+                      $('.original_listing_price').val(data.original_listing_price);
+                      $('.listing_price').val(data.listing_price);
+                      $('.rock_bottom').val(data.rock_bottom);
                       $('#enterChildInfo').show();
                       $('#relistFormParent').hide();
                     } else {
@@ -232,11 +241,11 @@
 
               // show description if warehouse inventory gets checked in for 'in house' use
               $('.disposition').change(function() {
-              	if ($(this).val() == "In House") {
-              		$('.internal_notes').show();
-              	} else {
-              		$('.internal_notes').hide();
-              	}
+                if ($(this).val() == "In House") {
+                  $('.internal_notes').show();
+                } else {
+                  $('.internal_notes').hide();
+                }
               })
 
             });
