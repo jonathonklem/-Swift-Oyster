@@ -68,7 +68,7 @@
               <h2>Relist</h2>
               <div id='getParent'>
                 <form id='relistFormParent' action='' method='post' onsubmit="return false">
-                  <label>Serial</label>
+                  <label>UPC</label>
                   <input name="data[InventoryItem][id]" type="text" class="serial">
                 </form>
               </div>
@@ -218,7 +218,7 @@
               });
               
               $('#relistFormParent .serial').keyup(function(event){
-                if(event.keyCode == 13){
+                if(event.keyCode == 13 || $('#relistFormParent .serial').val().length >= 12){
                   event.preventDefault();
                   $.post('https://www.pawnpire.com/assistant/get_parent', localStorage.getItem('credentials') + '&' + $('#relistFormParent').serialize(), function(data) {
                     if (data.response == 'success') {
