@@ -55,7 +55,8 @@
               <h2>Choose Task</h2>
               <a class="button go_to" id="warehouse_checkin">Warehouse Checkin</a><br>
               <a class="button go_to" id="relist">Relist</a><br>
-              <a class="button go_to" id="checkout">Checkout</a>
+              <a class="button go_to" id="checkout">Checkout</a><br>
+              <a class="button go_to" id="logout">Logout</a>
             </div>
             <div class="screen checkout">
               <h2>Checkout</h2>
@@ -151,7 +152,17 @@
 
               $('.go_to').click(function(e) {
                 e.preventDefault();
-                transition($(this).attr('id'));
+
+                if ($(this).attr('id') == 'logout') { 
+                  localStorage.removeItem('credentials');
+                  transition('login');
+                  $('#menu').hide();
+
+                  $('#UserUsername').val('');
+                  $('#UserPassword').val('');
+                } else {
+                  transition($(this).attr('id'));
+                }
               });
 
               $('#warehouseCheckinForm').on('submit', function(e) {
