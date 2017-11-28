@@ -177,6 +177,21 @@
                     if (data.response == 'success') {
                       $('#status').html($('#checkoutForm .serial').val() + ' checked out');
                       $('#checkoutForm .serial').val('');
+                    } else if (data.response == 'select_child') {
+                      if ($('#checkoutForm div').length) {
+                        return; // if they double posted, don't worry about showing this again
+                      }
+                      var linkHtml = "<div><center><br><br><strong style='color: white;'>SELECT CHILD</strong><br>";
+
+                      for (i = 0; i<data.children.length; i++) {
+                        linkHtml += "<a href='#' onclick='$(\"#checkoutForm .serial\").val(\"" + data.children[i] + "\").trigger(\"keyup\"); $(\"#checkoutForm div\").remove(); return false;' style='color: #c4942e;'>" + data.children[i] + "</a>";
+                      }
+                        
+                      linkHtml += "</center></div>";
+
+                      console.log(linkHtml);
+
+                      $('#checkoutForm').append(linkHtml);
                     } else {
                       $('#status').html('An error has occurred');
                     }
