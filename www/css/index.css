@@ -161,6 +161,6 @@ h2 {
     color: white;
     text-align: center;
 }
-.screen.checkout {
+.screen.checkout, .enter_serial {
     text-align: center;
 }

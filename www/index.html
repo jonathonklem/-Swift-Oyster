@@ -56,7 +56,19 @@
               <a class="button go_to" id="warehouse_checkin">Warehouse Checkin</a><br>
               <a class="button go_to" id="relist">Relist</a><br>
               <a class="button go_to" id="checkout">Checkout</a><br>
+              <a class="button go_to" id="audit">Audit</a><br>
               <a class="button go_to" id="logout">Logout</a>
+            </div>
+            <div class="screen audit">
+              <h2>Audit</h2>
+              <div class="enter_serial">
+                <form id="auditForm" onsubmit="return false;">
+                  <label>Serial</label>
+                  <input name="data[InventoryItem][id]" type="text" class="serial">
+                </form>
+              </div>
+              <div class="view_serial" style="display:none;">
+              </div>
             </div>
             <div class="screen checkout">
               <h2>Checkout</h2>
@@ -280,6 +292,34 @@
                 }
               })
 
+              $('#auditForm .serial').keyup(function(event) {
+                if (event.keyCode == 13 || ($('#auditForm .serial').val().length >= 6 && !isNaN($('#auditForm .serial').val()))) {
+                  event.preventDefault();
+                  $.post('https://www.pawnpire.com/assistant/audit', localStorage.getItem('credentials') + '&' + $('#auditForm').serialize(), function(data) {
+                    if (data.response == 'success') {
+                      $('.enter_serial').hide();
+                      $('.view_serial').show();
+              
+                      $('.view_serial').html(); // clear out any old html that may be there
+              
+                      output = '<table border=0 cellspacing=0 cellpadding=0 style="color: white;width: 40%;margin: auto;text-align: left;">';
+              
+                      if (data.ebayLink) {
+                        output += '<tr><td>Ebay Listing</td><td><a href="' + data.ebayLink + '">Here</a></td></tr>';
+                      }
+              
+                      output += '<tr><td>Days In Inventory</td><td>' + data.dii + '</td></tr>';
+                      output += '<tr><td>Cost</td><td>' + data.cost + '</td></tr>';
+                      output += '<tr><td>Current Price</td><td>' + data.price + '</td></tr>';
+                      output += '<tr><td>Markdown %</td><td>' + data.markdown + '</td></tr>';
+                      output += '<tr><td>Location</td><td>' + data.location + '</td></tr>';
+                      output += '</table>';
+              
+                      $('.view_serial').html(output);
+                    }
+                  }, 'json');
+                }
+              })
             });
 
 
