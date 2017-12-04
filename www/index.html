@@ -313,7 +313,7 @@
                       output += '<tr><td>Current Price</td><td>' + data.price + '</td></tr>';
                       output += '<tr><td>Markdown %</td><td>' + data.markdown + '</td></tr>';
                       output += '<tr><td>Location</td><td>' + data.location + '</td></tr>';
-                      output += '</table>';
+                      output += '</table><br><center><a href="#" onclick="$(\'.enter_serial\').show(); $(\'#auditForm .serial\').val(\'\'); $(\'.view_serial\').hide();" style="color: #c4942f;text-decoration: none;">Back</a></center>';
               
                       $('.view_serial').html(output);
                     }
