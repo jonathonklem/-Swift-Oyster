@@ -57,7 +57,19 @@
               <a class="button go_to" id="relist">Relist</a><br>
               <a class="button go_to" id="checkout">Checkout</a><br>
               <a class="button go_to" id="audit">Audit</a><br>
+              <a class="button go_to" id="find_locations">Find Locations</a><br>
               <a class="button go_to" id="logout">Logout</a>
+            </div>
+            <div class="screen find_locations">
+              <h2>Find Locations</h2>
+              <div class="enter_serial">
+                <form id="location_serial" onsubmit="return false;">
+                  <label>Serial</label>
+                  <input name="data[InventoryItem][id]" type="text" class="serial">
+                </form>
+              </div>
+              <div class="view_serial" style="display:none;">
+              </div>
             </div>
             <div class="screen audit">
               <h2>Audit</h2>
@@ -291,6 +303,23 @@
                   $('.internal_notes').hide();
                 }
               })
+
+              $('#location_serial .serial').keyup(function(event) {
+                if (event.keyCode == 13 || ($('#location_serial .serial').val().length >= 6 && !isNaN($('#location_serial .serial').val()))) {
+                  event.preventDefault();
+                  $.post('https://www.pawnpire.com/assistant/find_location', localStorage.getItem('credentials') + '&' + $('#location_serial').serialize(), function(data) {
+                    if (data.response == 'success') {
+                      $('.enter_serial').hide();
+                      $('.view_serial').show();
+
+                      output = data.location_info;
+                      output += '</table><br><center><a href="#" onclick="$(\'.enter_serial\').show(); $(\'#location_serial .serial\').val(\'\'); $(\'.view_serial\').hide();" style="font-size:23px;color: #c4942f;text-decoration: none;">Back</a></center>';
+
+                      $('.view_serial').html(output);
+                    }
+                  }, 'json');
+                }
+              });
 
               $('#auditForm .serial').keyup(function(event) {
                 if (event.keyCode == 13 || ($('#auditForm .serial').val().length >= 6 && !isNaN($('#auditForm .serial').val()))) {
