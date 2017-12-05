@@ -302,10 +302,12 @@
               
                       $('.view_serial').html(); // clear out any old html that may be there
               
-                      output = '<table border=0 cellspacing=0 cellpadding=0 style="color: white;width: 40%;margin: auto;text-align: left;">';
+                      output = '<table border=0 cellspacing=0 cellpadding=10 style="color: white;width: 40%;margin: auto;text-align: left; font-size:23px;">';
               
                       if (data.ebayLink) {
-                        output += '<tr><td>Ebay Listing</td><td><a href="' + data.ebayLink + '">Here</a></td></tr>';
+                        output += '<tr><td>Ebay Listing</td><td><a href="' + data.ebayLink + '" style="color:white;text-decoration:none;">Here</a></td></tr>';
+                      } else {
+                        output += '<tr><td>Ebay Listing</td><td><a href="#" style="color:red;text-decoration:none">NOT FOUND</a></td></tr>';
                       }
               
                       output += '<tr><td>Days In Inventory</td><td>' + data.dii + '</td></tr>';
@@ -313,7 +315,7 @@
                       output += '<tr><td>Current Price</td><td>' + data.price + '</td></tr>';
                       output += '<tr><td>Markdown %</td><td>' + data.markdown + '</td></tr>';
                       output += '<tr><td>Location</td><td>' + data.location + '</td></tr>';
-                      output += '</table><br><center><a href="#" onclick="$(\'.enter_serial\').show(); $(\'#auditForm .serial\').val(\'\'); $(\'.view_serial\').hide();" style="color: #c4942f;text-decoration: none;">Back</a></center>';
+                      output += '</table><br><center><a href="#" onclick="$(\'.enter_serial\').show(); $(\'#auditForm .serial\').val(\'\'); $(\'.view_serial\').hide();" style="font-size:23px;color: #c4942f;text-decoration: none;">Back</a></center>';
               
                       $('.view_serial').html(output);
                     }
