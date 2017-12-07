@@ -208,7 +208,7 @@
                       var linkHtml = "<div><center><br><br><strong style='color: white;'>SELECT CHILD</strong><br>";
 
                       for (i = 0; i<data.children.length; i++) {
-                        linkHtml += "<a href='#' onclick='$(\"#checkoutForm .serial\").val(\"" + data.children[i] + "\").trigger(\"keyup\"); $(\"#checkoutForm div\").remove(); return false;' style='color: #c4942e;'>" + data.children[i] + "</a>";
+                        linkHtml += "<a href='#' onclick='$(\"#checkoutForm .serial\").val(\"" + data.children[i] + "\").trigger(\"keyup\"); $(\"#checkoutForm div\").remove(); return false;' style='color: #c4942e;'>" + data.children[i] + "</a><br>";
                       }
                         
                       linkHtml += "</center></div>";
