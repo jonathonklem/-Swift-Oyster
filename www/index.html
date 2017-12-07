@@ -56,6 +56,7 @@
               <a class="button go_to" id="warehouse_checkin">Warehouse Checkin</a><br>
               <a class="button go_to" id="relist">Relist</a><br>
               <a class="button go_to" id="checkout">Checkout</a><br>
+              <a class="button go_to" id="uncheckout">Uncheckout</a><br>
               <a class="button go_to" id="audit">Audit</a><br>
               <a class="button go_to" id="find_locations">Find Locations</a><br>
               <a class="button go_to" id="logout">Logout</a>
@@ -81,6 +82,13 @@
               </div>
               <div class="view_serial" style="display:none;">
               </div>
+            </div>
+            <div class="screen uncheckout">
+              <h2>Uncheckout</h2>
+              <form id="uncheckoutForm" onsubmit="return false">
+                <label>Serial</label>
+                <input name="data[InventoryItem][id]" type="text" class="serial">
+              </form>
             </div>
             <div class="screen checkout">
               <h2>Checkout</h2>
@@ -192,6 +200,18 @@
               $('#warehouseCheckinForm').on('submit', function(e) {
                 e.preventDefault();
                 return false;
+              });
+
+              $('#uncheckoutForm .serial').keyup(function(event){
+                if (event.keyCode == 13 || ($('#uncheckoutForm .serial').val().length >= 6 && !isNaN($('#uncheckoutForm .serial').val()))) {
+                  event.preventDefault();
+                  $.post('https://www.pawnpire.com/assistant/uncheck_out', localStorage.getItem('credentials') + '&' + $('#uncheckoutForm').serialize(), function(data) {
+                    if (data.response == 'success') {
+                      $('#status').html($('#uncheckoutForm .serial').val() + ' unchecked out');
+                      $('#uncheckoutForm .serial').val('');
+                    }
+                  }, 'json');
+                }
               });
 
               $('#checkoutForm .serial').keyup(function(event){
@@ -334,7 +354,7 @@
                       output = '<table border=0 cellspacing=0 cellpadding=10 style="color: white;width: 90%;margin: auto;text-align: left; font-size:23px;">';
               
                       if (data.ebayLink) {
-                        output += '<tr><td>Ebay Listing</td><td><a href="' + data.ebayLink + '" style="color:white !important;text-decoration:none !important;">Here</a></td></tr>';
+                        output += '<tr><td>Ebay Listing</td><td><a href="' + data.ebayLink + '" style="color:white !important;">Click Here</a></td></tr>';
                       } else {
                         output += '<tr><td>Ebay Listing</td><td><a href="#" style="color:red;text-decoration:none">NOT FOUND</a></td></tr>';
                       }

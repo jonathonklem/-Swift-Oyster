@@ -150,7 +150,7 @@ input.serial, #internal_notes {
     width: 66%;
     font-size: 45px;
 }
-div#enterChildInfo, #getParent {
+div#enterChildInfo, #getParent, .uncheckout {
   text-align: center;
 }
 a#menu {
@@ -164,3 +164,4 @@ h2 {
 .screen.checkout, .enter_serial {
     text-align: center;
 }
+
