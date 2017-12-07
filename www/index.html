@@ -205,7 +205,7 @@
                       if ($('#checkoutForm div').length) {
                         return; // if they double posted, don't worry about showing this again
                       }
-                      var linkHtml = "<div><center><br><br><strong style='color: white;'>SELECT CHILD</strong><br>";
+                      var linkHtml = "<div style="font-size: 24px; line-height: 40px;"><center><br><br><strong style='color: white;'>SELECT CHILD</strong><br>";
 
                       for (i = 0; i<data.children.length; i++) {
                         linkHtml += "<a href='#' onclick='$(\"#checkoutForm .serial\").val(\"" + data.children[i] + "\").trigger(\"keyup\"); $(\"#checkoutForm div\").remove(); return false;' style='color: #c4942e;'>" + data.children[i] + "</a><br>";
