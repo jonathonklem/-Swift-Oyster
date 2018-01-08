@@ -361,6 +361,11 @@
               
                       output += '<tr><td>Days In Inventory</td><td>' + data.dii + '</td></tr>';
                       output += '<tr><td>Cost</td><td>' + data.cost + '</td></tr>';
+
+             	      if (data.sale_date) {
+                        output += '<tr><td>Last Sale Date</td><td>' + data.sale_date + '</td></tr>';
+                      }
+
                       output += '<tr><td>Current Price</td><td>' + data.price + '</td></tr>';
                       output += '<tr><td>Markdown %</td><td>' + data.markdown + '</td></tr>';
                       output += '<tr><td>Location</td><td>' + data.location + '</td></tr>';
