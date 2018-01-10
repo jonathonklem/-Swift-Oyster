@@ -272,8 +272,8 @@
               });
 
               $('#relistFormChild .child').keyup(function(event){
-		$('#status').html('Contacting ebay, please wait');
                 if(event.keyCode == 13 || $('#relistFormChild .child').val().length >= 6){
+                  $('#status').html('Contacting ebay, please wait');
                   event.preventDefault();
                   $.post('https://www.pawnpire.com/assistant/relist_item', localStorage.getItem('credentials') + '&' + $('#relistFormParent').serialize() + '&' +    $('#relistFormChild').serialize(), function(data) {
                       if (data.response == 'success') {
