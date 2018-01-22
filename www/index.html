@@ -93,6 +93,9 @@
             <div class="screen checkout">
               <h2>Checkout</h2>
               <form id="checkoutForm" onsubmit="return false">
+                <label>Ebay Order Number</label>
+                <input name="data[InventoryItem][ebay_order_number]" type="text" style="height: 40px; width: 66%; font-size: 45px;">
+
                 <label>Serial</label>
                 <input name="data[InventoryItem][id]" type="text" class="serial">
               </form>
@@ -220,7 +223,7 @@
                   $.post('https://www.pawnpire.com/assistant/check_out', localStorage.getItem('credentials') + '&' + $('#checkoutForm').serialize(), function(data) {
                     if (data.response == 'success') {
                       $('#status').html($('#checkoutForm .serial').val() + ' checked out');
-                      $('#checkoutForm .serial').val('');
+                      $('#checkoutForm input').val('');
                     } else if (data.response == 'select_child') {
                       if ($('#checkoutForm div').length) {
                         return; // if they double posted, don't worry about showing this again
