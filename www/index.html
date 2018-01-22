@@ -276,6 +276,7 @@
 
               $('#relistFormChild .child').keyup(function(event){
                 if(event.keyCode == 13 || $('#relistFormChild .child').val().length >= 6){
+                  $('#status').html('Contacting ebay, please wait');
                   event.preventDefault();
                   $.post('https://www.pawnpire.com/assistant/relist_item', localStorage.getItem('credentials') + '&' + $('#relistFormParent').serialize() + '&' +    $('#relistFormChild').serialize(), function(data) {
                       if (data.response == 'success') {
@@ -364,6 +365,11 @@
               
                       output += '<tr><td>Days In Inventory</td><td>' + data.dii + '</td></tr>';
                       output += '<tr><td>Cost</td><td>' + data.cost + '</td></tr>';
+
+             	      if (data.sale_date) {
+                        output += '<tr><td>Last Sale Date</td><td>' + data.sale_date + '</td></tr>';
+                      }
+
                       output += '<tr><td>Current Price</td><td>' + data.price + '</td></tr>';
                       output += '<tr><td>Markdown %</td><td>' + data.markdown + '</td></tr>';
                       output += '<tr><td>Location</td><td>' + data.location + '</td></tr>';
@@ -391,3 +397,4 @@
         </script>
     </body>
 </html>
+
