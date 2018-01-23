@@ -255,6 +255,7 @@
                       if (data.response == 'success') {
                         $('#status').html('<span style="color: #00BB00;">' + $('#warehouseCheckinForm .serial').val() + ' checked in</span>');
                         $('#warehouseCheckinForm .serial').val('');
+			$('#internal_notes').val('');
                       } else {
                         $('#status').html('An error occured');
                       } 
