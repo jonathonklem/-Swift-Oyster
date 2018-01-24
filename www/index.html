@@ -301,7 +301,12 @@
                         }
 
                         window.is_submitting = false;
-                      }, 'json');
+                      }, 'json').fail(function() {
+			$('#status').html('An error occurred');
+                        window.is_submitting = false;
+		      }).always(function() {
+                        window.is_submitting = false;
+		      });
                   }
                 }
               });
