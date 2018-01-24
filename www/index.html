@@ -158,6 +158,9 @@
         <script type="text/javascript" src="js/jquery.js"></script>
         <script type="text/javascript">
             app.initialize();
+
+            window.is_submitting = false;
+
             $(document).ready(function() {
               $('.internal_notes').hide();
 
@@ -258,7 +261,7 @@
                       if (data.response == 'success') {
                         $('#status').html('<span style="color: #00BB00;">' + $('#warehouseCheckinForm .serial').val() + ' checked in</span>');
                         $('#warehouseCheckinForm .serial').val('');
-			$('#internal_notes').val('');
+      $('#internal_notes').val('');
                       } else {
                         $('#status').html('An error occured');
                       } 
@@ -276,25 +279,30 @@
               });
 
               $('#relistFormChild .child').keyup(function(event){
-                if(event.keyCode == 13 || $('#relistFormChild .child').val().length >= 6){
-                  $('#status').html('Contacting ebay, please wait');
-                  event.preventDefault();
-                  $.post('https://www.pawnpire.com/assistant/relist_item', localStorage.getItem('credentials') + '&' + $('#relistFormParent').serialize() + '&' +    $('#relistFormChild').serialize(), function(data) {
-                      if (data.response == 'success') {
-                        $('#status').html('Relisted successfully');
+                if (!window.is_submitting) {
+                  if(event.keyCode == 13 || $('#relistFormChild .child').val().length >= 6){
+                    window.is_submitting = true;
+                    $('#status').html('Contacting ebay, please wait');
+                    event.preventDefault();
+                    $.post('https://www.pawnpire.com/assistant/relist_item', localStorage.getItem('credentials') + '&' + $('#relistFormParent').serialize() + '&' +    $('#relistFormChild').serialize(), function(data) {
+                        if (data.response == 'success') {
+                          $('#status').html('Relisted successfully');
               
-                        setTimeout(function() {
-                          $('#relistFormChild')[0].reset();
-                          $('#relistFormParent')[0].reset();
+                          setTimeout(function() {
+                            $('#relistFormChild')[0].reset();
+                            $('#relistFormParent')[0].reset();
               
-                        $('#enterChildInfo').hide();
-                        $('#relistFormParent').show();   
-                        $('#status').html('');        
-                        }, 500)
-                      } else {
-                        $('#status').html('An error occurred');
-                      }
-                    }, 'json');
+                          $('#enterChildInfo').hide();
+                          $('#relistFormParent').show();   
+                          $('#status').html('');        
+                          }, 500)
+                        } else {
+                          $('#status').html('An error occurred');
+                        }
+
+                        window.is_submitting = false;
+                      }, 'json');
+                  }
                 }
               });
               
@@ -367,7 +375,7 @@
                       output += '<tr><td>Days In Inventory</td><td>' + data.dii + '</td></tr>';
                       output += '<tr><td>Cost</td><td>' + data.cost + '</td></tr>';
 
-             	      if (data.sale_date) {
+                    if (data.sale_date) {
                         output += '<tr><td>Last Sale Date</td><td>' + data.sale_date + '</td></tr>';
                       }
 
