@@ -59,7 +59,20 @@
               <a class="button go_to" id="uncheckout">Uncheckout</a><br>
               <a class="button go_to" id="audit">Audit</a><br>
               <a class="button go_to" id="find_locations">Find Locations</a><br>
+              <a class="button go_to" id="report_not_found">Report Not Found</a><br>
               <a class="button go_to" id="logout">Logout</a>
+            </div>
+            <div class="screen report_not_found">
+              <h2>Report Item Not Found</h2>
+              <div class="enter_serial">
+                <form id="notFoundForm" onsubmit="return false">
+                  <label>Order ID</label>
+                  <input name="data[Issue][order_id]" style="height: 40px; width: 66%; font-size: 45px;" type="text">
+
+                  <label>Serial Number</label>
+                  <input name="data[Issue][inventory_item_id]" class="serial" type="text">
+                </form>
+              </div>
             </div>
             <div class="screen find_locations">
               <h2>Find Locations</h2>
@@ -208,6 +221,18 @@
                 return false;
               });
 
+              $('#notFoundForm .serial').keyup(function(event) {
+                if (event.keyCode == 13 || ($('#notFoundForm .serial').val().length >= 6 && !isNaN($('#notFoundForm .serial').val()))) {
+                  event.preventDefault();
+                  $.post('https://www.pawnpire.com/assistant/not_found', localStorage.getItem('credentials') + '&' + $('#notFoundForm').serialize(), function(data) {
+                    if (data.response == 'success') {
+                      $('#status').html($('#notFoundForm .serial').val() + ' reported not found');
+                      $('#notFoundForm input').val('');
+                    }
+                  }, 'json');
+                }
+              });
+
               $('#uncheckoutForm .serial').keyup(function(event){
                 if (event.keyCode == 13 || ($('#uncheckoutForm .serial').val().length >= 6 && !isNaN($('#uncheckoutForm .serial').val()))) {
                   event.preventDefault();
@@ -302,11 +327,11 @@
 
                         window.is_submitting = false;
                       }, 'json').fail(function() {
-			$('#status').html('An error occurred');
+      $('#status').html('An error occurred');
                         window.is_submitting = false;
-		      }).always(function() {
+          }).always(function() {
                         window.is_submitting = false;
-		      });
+          });
                   }
                 }
               });
