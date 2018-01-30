@@ -246,36 +246,54 @@
               });
 
               $('#checkoutForm .serial').keyup(function(event){
-                if (event.keyCode == 13 || ($('#checkoutForm .serial').val().length >= 6 && !isNaN($('#checkoutForm .serial').val()))) {
-                  event.preventDefault();
-                  $.post('https://www.pawnpire.com/assistant/check_out', localStorage.getItem('credentials') + '&' + $('#checkoutForm').serialize(), function(data) {
-                    if (data.response == 'success') {
-                      $('#status').html($('#checkoutForm .serial').val() + ' checked out');
-                      $('#checkoutForm input').val('');
-                    } else if (data.response == 'select_child') {
-                      if ($('#checkoutForm div').length) {
-                        return; // if they double posted, don't worry about showing this again
+                if (!window.is_submitting) {
+                  if (event.keyCode == 13 || ($('#checkoutForm .serial').val().length >= 6 && !isNaN($('#checkoutForm .serial').val()))) {
+                    window.is_submitting = true;
+
+                    event.preventDefault();
+
+                    // first send request to server to see if they have shipping info
+                    $.post('https://www.pawnpire.com/assistant/get_shipping_info', localStorage.getItem('credentials') + '&' + $('#checkoutForm').serialize(), function(data) {
+                      if (data.response != 'no_requests') {
+                        if (confirm("This serial has a shipping request: " + data.issue.Issue.message)) {
+                          $.post('https://www.pawnpire.com/assistant/acknowledge_shipping_info', localStorage.getItem('credentials') + '&' + $('#checkoutForm').serialize(), function(data) {
+                          }, 'json')
+                        }
                       }
-                      var linkHtml = "<div style=\"font-size: 24px; line-height: 40px;\"><center><br><br><strong style='color: white;'>SELECT CHILD</strong><br>";
 
-                      for (i = 0; i<data.children.length; i++) {
-                        linkHtml += "<a href='#' onclick='$(\"#checkoutForm .serial\").val(\"" + data.children[i] + "\").trigger(\"keyup\"); $(\"#checkoutForm div\").remove(); return false;' style='color: #c4942e;'>" + data.children[i] + "</a><br>";
-                      }
-                        
-                      linkHtml += "</center></div>";
+                      $.post('https://www.pawnpire.com/assistant/check_out', localStorage.getItem('credentials') + '&' + $('#checkoutForm').serialize(), function(data) {
+                        if (data.response == 'success') {
+                          $('#status').html($('#checkoutForm .serial').val() + ' checked out');
+                          $('#checkoutForm input').val('');
+                        } else if (data.response == 'select_child') {
+                          if ($('#checkoutForm div').length) {
+                            return; // if they double posted, don't worry about showing this again
+                          }
+                          var linkHtml = "<div style=\"font-size: 24px; line-height: 40px;\"><center><br><br><strong style='color: white;'>SELECT CHILD</strong><br>";
 
-                      console.log(linkHtml);
+                          for (i = 0; i<data.children.length; i++) {
+                            linkHtml += "<a href='#' onclick='$(\"#checkoutForm .serial\").val(\"" + data.children[i] + "\").trigger(\"keyup\"); $(\"#checkoutForm div\").remove(); return false;' style='color: #c4942e;'>" + data.children[i] + "</a><br>";
+                          }
+                            
+                          linkHtml += "</center></div>";
 
-                      $('#checkoutForm').append(linkHtml);
-                    } else {
-                      $('#status').html('An error has occurred');
-                    }
-                      
-                    setTimeout(function() {
-                      $('#status').html('');
-                    }, 1500);
-                  }, 'json');
-                } 
+                          console.log(linkHtml);
+
+                          $('#checkoutForm').append(linkHtml);
+                        } else {
+                          $('#status').html('An error has occurred');
+                        }
+                          
+                        setTimeout(function() {
+                          $('#status').html('');
+                        }, 1500);
+
+                        window.is_submitting = false;
+                      }, 'json');
+
+                    }, 'json');
+                  } 
+                }
               });
 
               $('#warehouseCheckinForm .serial').keyup(function(event){
@@ -327,11 +345,11 @@
 
                         window.is_submitting = false;
                       }, 'json').fail(function() {
-      $('#status').html('An error occurred');
-                        window.is_submitting = false;
-          }).always(function() {
-                        window.is_submitting = false;
-          });
+                        $('#status').html('An error occurred');
+                                      window.is_submitting = false;
+                        }).always(function() {
+                                      window.is_submitting = false;
+                        });
                   }
                 }
               });
