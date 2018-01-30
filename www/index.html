@@ -34,6 +34,7 @@
         <div id="deviceready" class="blink">
             <img src="https://www.pawnpire.com/img/Pawn-Coat-Of-Arms-final.png" class="armorium">
             <div id="status"></div>
+            <div id="globalstatus"></div>
             <a class="button go_to" id="menu">Go Back</a>
             <div class="screen login">
                 <div class="login">
@@ -169,6 +170,42 @@
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
         <script type="text/javascript" src="js/jquery.js"></script>
+
+        <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
+        <script>
+          // Initialize Firebase
+          var config = {
+            apiKey: "AIzaSyATduI8M5HHjJ_bqazs7t9XwoljIzLLKmQ",
+            authDomain: "pawnpireassistant.firebaseapp.com",
+            databaseURL: "https://pawnpireassistant.firebaseio.com",
+            projectId: "pawnpireassistant",
+            storageBucket: "pawnpireassistant.appspot.com",
+            messagingSenderId: "95552872103"
+          };
+          firebase.initializeApp(config);
+
+          // poll the messages every half second
+          setInterval(function() {
+            firebase.database().ref('alert').once('value').then(function(value) {
+                if (value.val()) {
+                  message = value.val();
+                  if (message.message) {
+                    var text = "";
+
+                    $(message.message).each(function(index, item) {
+                      for (var i in item) {
+                        text += item[i] + "<br>";
+                      } 
+                    });
+
+                    $('#globalstatus').html(text);
+                  }
+                } else {
+                    $('#globalstatus').html('');
+                }
+            });
+          }, 500);      
+        </script>
         <script type="text/javascript">
             app.initialize();
 
