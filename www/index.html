@@ -259,6 +259,14 @@
             window.is_submitting = false;
 
             $(document).ready(function() {
+              $('#warehouse_checkin').click(function() {
+                $('#globalstatus').hide();
+              });
+
+              $('#menu').click(function() {
+                $('#globalstatus').show();
+              });
+
               $('.internal_notes').hide();
 
               window.stage = "login";
