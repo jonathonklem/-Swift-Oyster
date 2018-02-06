@@ -118,7 +118,7 @@
 
                   <div id="box_type_2" style="display: none;">
                     <label>Box Type 2</label>
-                    <select name="data[InventoryItem][box_id_2]" id="InventoryItemBoxId" style="height: 59px; width: 66%; font-size: 45px;">
+                    <select name="data[InventoryItem][box_id_2]" id="InventoryItemBoxId2" style="height: 59px; width: 66%; font-size: 45px;">
                       <option value="">Choose</option>
                       <option value="1">10 x 10 x 10"</option>
                       <option value="2">10 x 10 x 5"</option>
@@ -156,7 +156,7 @@
 
                   <div id="box_type_3" style="display: none;">
                     <label>Box Type 3</label>
-                    <select name="data[InventoryItem][box_id_3]" id="InventoryItemBoxId" style="height: 59px; width: 66%; font-size: 45px;">
+                    <select name="data[InventoryItem][box_id_3]" id="InventoryItemBoxId3" style="height: 59px; width: 66%; font-size: 45px;">
                       <option value="">Choose</option>
                       <option value="1">10 x 10 x 10"</option>
                       <option value="2">10 x 10 x 5"</option>
@@ -192,12 +192,13 @@
                     </select>
                   </div>
 
-                  <button id="add_box" class="button" style="width: 200px !important;margin-top: 20px;">Add Box</button>
-                  <button id="remove_box" class="button" style="display: none; width: 200px !important;margin-top: 20px;">Remove Box</button>
 
                   <label>Order Number</label>
                   <input name="data[ShipOrder][order_number]" type="text" class="serial">
                 </form>
+
+                <button id="add_box" class="button" style="width: 200px !important;margin-top: 20px;">Add Box</button>
+                <button id="remove_box" class="button" style="display: none; width: 200px !important;margin-top: 20px;">Remove Box</button>
               </div>
               <div class="view_serial" style="display:none;">
               </div>
@@ -418,6 +419,9 @@
                         if (data.response == 'success') {
                           $('#status').html($('#ship_order_form .serial').val() + ' shipped out');
                           $('#ship_order_form .serial').val('');
+                          $('select#InventoryItemBoxId').val('');
+                          $('select#InventoryItemBoxId2').val('');
+                          $('select#InventoryItemBoxId3').val('');
                         }
 
                         window.is_submitting = false;
