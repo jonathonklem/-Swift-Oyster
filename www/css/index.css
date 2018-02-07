@@ -168,3 +168,8 @@ h2 {
 div#deviceready {
     min-height: 2000px;
 }
+div#check_order_form_response {
+    text-align: center;
+    color: white;
+    padding: 20px;
+}

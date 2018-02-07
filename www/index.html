@@ -61,6 +61,7 @@
               <a class="button go_to" id="audit">Audit</a><br>
               <a class="button go_to" id="find_locations">Find Locations</a><br>
               <a class="button go_to" id="ship_order">Ship Order</a><br>
+              <a class="button go_to" id="check_order">Check Order</a><br>
               <a class="button go_to" id="report_not_found">Report Not Found</a><br>
               <a class="button go_to" id="logout">Logout</a>
             </div>
@@ -73,6 +74,16 @@
 
                   <label>Serial Number</label>
                   <input name="data[Issue][inventory_item_id]" class="serial" type="text">
+                </form>
+              </div>
+            </div>
+	          <div class="screen check_order">	
+              <h2>Check Order</h2>
+              <div class="enter_serial">
+                <form id="check_order_form" onsubmit="return false;">
+                  <label>Order Number</label>
+                  <input name="data[EbayOrder][sales_record_number]" type="text" class="serial">
+                  <div id="check_order_form_response"></div>
                 </form>
               </div>
             </div>
@@ -414,6 +425,24 @@
                       $('#notFoundForm input').val('');
                     }
                   }, 'json');
+                }
+              });
+
+              $('#check_order_form .serial').keyup(function(event) {
+                if (!window.is_submitting) {
+                  if (event.keyCode == 13) {
+                    window.is_submitting = true;
+
+                    event.preventDefault();
+                    $.post('https://www.pawnpire.com/assistant/get_order_items', localStorage.getItem('credentials') + '&' + $('#check_order_form').serialize(), function(data) {
+                      if (data.success) {
+                        var html_response = "<strong>" + data.item.title + "</strong><br>";
+                        html_response += "<img src='https://www.pawnpire.com/" + data.item.image + "' style='max-width: 90%;'><br>";
+                        html_response += data.item.address + "<br>";
+                        $('#check_order_form_response').html(html_response);
+                      }
+                    }, 'json');
+                  }
                 }
               });
 
