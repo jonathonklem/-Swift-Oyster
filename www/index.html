@@ -77,7 +77,7 @@
                 </form>
               </div>
             </div>
-	          <div class="screen check_order">	
+            <div class="screen check_order">  
               <h2>Check Order</h2>
               <div class="enter_serial">
                 <form id="check_order_form" onsubmit="return false;">
@@ -308,7 +308,7 @@
                 </div>
               </form>
             </div>
-	   <a href="http://pawnpire.com/latest.apk" style="
+     <a href="http://pawnpire.com/latest.apk" style="
     text-align: center;
     display: block;
     color: red;
@@ -439,8 +439,11 @@
                         var html_response = "<strong>" + data.item.title + "</strong><br>";
                         html_response += "<img src='https://www.pawnpire.com/" + data.item.image + "' style='max-width: 90%;'><br>";
                         html_response += data.item.address + "<br>";
+                        html_response += '<center><a href="#" onclick="$(\'#check_order_form_response\').html(\'\'); $(\'#check_order_form .serial\').val(\'\');" style="font-size:23px;color: #c4942f;text-decoration: none;">Back</a></center>';
                         $('#check_order_form_response').html(html_response);
                       }
+
+                      window.is_submitting = false;
                     }, 'json');
                   }
                 }
@@ -486,53 +489,53 @@
               $('#checkoutForm .serial').keyup(function(event){
                 if (!window.is_submitting) {
                   if (event.keyCode == 13 || ($('#checkoutForm .serial').val().length >= 6 && !isNaN($('#checkoutForm .serial').val()))) {
-		     if ($('#globalstatus').html().indexOf($('#checkoutForm .ordernum').val()) !== -1) {
+         if ($('#globalstatus').html().indexOf($('#checkoutForm .ordernum').val()) !== -1) {
                         alert('There is a pending cancellation request for this item.  Do not ship');
                      } else {
-                    	window.is_submitting = true;
+                      window.is_submitting = true;
 
-                    	event.preventDefault();
+                      event.preventDefault();
 
-                    	// first send request to server to see if they have shipping info
-                    	$.post('https://www.pawnpire.com/assistant/get_shipping_info', localStorage.getItem('credentials') + '&' + $('#checkoutForm').serialize(), function(data) {
-                    	  if (data.response != 'no_requests') {
-                    	    if (confirm("This serial has a shipping request: " + data.issue.Issue.message)) {
-                    	      $.post('https://www.pawnpire.com/assistant/acknowledge_shipping_info', localStorage.getItem('credentials') + '&' + $('#checkoutForm').serialize(), function(data) {
-                    	      }, 'json')
-                    	    }
-                    	  }
+                      // first send request to server to see if they have shipping info
+                      $.post('https://www.pawnpire.com/assistant/get_shipping_info', localStorage.getItem('credentials') + '&' + $('#checkoutForm').serialize(), function(data) {
+                        if (data.response != 'no_requests') {
+                          if (confirm("This serial has a shipping request: " + data.issue.Issue.message)) {
+                            $.post('https://www.pawnpire.com/assistant/acknowledge_shipping_info', localStorage.getItem('credentials') + '&' + $('#checkoutForm').serialize(), function(data) {
+                            }, 'json')
+                          }
+                        }
 
-                    	  $.post('https://www.pawnpire.com/assistant/check_out', localStorage.getItem('credentials') + '&' + $('#checkoutForm').serialize(), function(data) {
-                    	    if (data.response == 'success') {
-                    	      $('#status').html($('#checkoutForm .serial').val() + ' checked out');
-                    	      $('#checkoutForm input').val('');
-                    	    } else if (data.response == 'select_child') {
-                    	      if ($('#checkoutForm div').length) {
-                    	        return; // if they double posted, don't worry about showing this again
-                    	      }
-                    	      var linkHtml = "<div style=\"font-size: 24px; line-height: 40px;\"><center><br><br><strong style='color: white;'>SELECT CHILD</strong><br>";
+                        $.post('https://www.pawnpire.com/assistant/check_out', localStorage.getItem('credentials') + '&' + $('#checkoutForm').serialize(), function(data) {
+                          if (data.response == 'success') {
+                            $('#status').html($('#checkoutForm .serial').val() + ' checked out');
+                            $('#checkoutForm input').val('');
+                          } else if (data.response == 'select_child') {
+                            if ($('#checkoutForm div').length) {
+                              return; // if they double posted, don't worry about showing this again
+                            }
+                            var linkHtml = "<div style=\"font-size: 24px; line-height: 40px;\"><center><br><br><strong style='color: white;'>SELECT CHILD</strong><br>";
 
-                    	      for (i = 0; i<data.children.length; i++) {
-                    	        linkHtml += "<a href='#' onclick='$(\"#checkoutForm .serial\").val(\"" + data.children[i] + "\").trigger(\"keyup\"); $(\"#checkoutForm div\").remove(); return false;' style='color: #c4942e;'>" + data.children[i] + "</a><br>";
-                    	      }
-                    	        
-                    	      linkHtml += "</center></div>";
+                            for (i = 0; i<data.children.length; i++) {
+                              linkHtml += "<a href='#' onclick='$(\"#checkoutForm .serial\").val(\"" + data.children[i] + "\").trigger(\"keyup\"); $(\"#checkoutForm div\").remove(); return false;' style='color: #c4942e;'>" + data.children[i] + "</a><br>";
+                            }
+                              
+                            linkHtml += "</center></div>";
 
-                    	      console.log(linkHtml);
+                            console.log(linkHtml);
 
-                    	      $('#checkoutForm').append(linkHtml);
-                    	    } else {
-                    	      $('#status').html('An error has occurred');
-                    	    }
-                    	      
-                    	    setTimeout(function() {
-                    	      $('#status').html('');
-                    	    }, 1500);
+                            $('#checkoutForm').append(linkHtml);
+                          } else {
+                            $('#status').html('An error has occurred');
+                          }
+                            
+                          setTimeout(function() {
+                            $('#status').html('');
+                          }, 1500);
 
-                    	    window.is_submitting = false;
-                    	  }, 'json');
+                          window.is_submitting = false;
+                        }, 'json');
 
-                    	}, 'json');
+                      }, 'json');
                      } 
                   } 
                 }
