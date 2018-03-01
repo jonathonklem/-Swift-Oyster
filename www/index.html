@@ -1,24 +1,4 @@
 <!DOCTYPE html>
-<!--
-    Copyright (c) 2012-2014 Adobe Systems Incorporated. All rights reserved.
-
-    Licensed to the Apache Software Foundation (ASF) under one
-    or more contributor license agreements.  See the NOTICE file
-    distributed with this work for additional information
-    regarding copyright ownership.  The ASF licenses this file
-    to you under the Apache License, Version 2.0 (the
-    "License"); you may not use this file except in compliance
-    with the License.  You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing,
-    software distributed under the License is distributed on an
-    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-     KIND, either express or implied.  See the License for the
-    specific language governing permissions and limitations
-    under the License.
--->
 <html>
     <head>
         <meta charset="utf-8" />
@@ -34,7 +14,6 @@
         <div id="deviceready" class="blink">
             <img src="https://www.pawnpire.com/img/Pawn-Coat-Of-Arms-final.png" class="armorium">
             <div id="status"></div>
-            <div id="globalstatus"></div>
             <a class="button go_to" id="menu">Go Back</a>
             <div class="screen login">
                 <div class="login">
@@ -55,6 +34,7 @@
             <div class="screen menu">
               <h2>Choose Task</h2>
               <a class="button go_to" id="warehouse_checkin">Warehouse Checkin</a><br>
+              <a class="button go_to" id="shipping_issues">Shipping Issues</a><br>
               <a class="button go_to" id="relist">Relist</a><br>
               <a class="button go_to" id="checkout">Checkout</a><br>
               <a class="button go_to" id="uncheckout">Uncheckout</a><br>
@@ -75,6 +55,16 @@
                   <label>Serial Number</label>
                   <input name="data[Issue][inventory_item_id]" class="serial" type="text">
                 </form>
+              </div>
+            </div>
+            <div class="screen shipping_issues">
+              <h2>Shipping Issues</h2>
+              <input name="shipping_issue_search" id="shipping_issue_search" style="height: 40px;width: 43%;font-size: 45px;margin: auto;display: block;" type="text"><br>
+              <div id="globalstatus">
+                <h3>Cancelled Orders</h3>
+                <ul style="list-style-type: none;" class="cancelled_orders"> </ul>
+                <h3>Other Issues</h3>
+                <ul style="list-style-type: none;" class="other_issues"> </ul>
               </div>
             </div>
             <div class="screen check_order">  
@@ -340,18 +330,29 @@
                 if (value.val()) {
                   message = value.val();
                   if (message.message) {
-                    var text = "";
+                    $('.cancelled_orders').html('');
+                    $('.other_issues').html('');
 
                     $(message.message).each(function(index, item) {
                       for (var i in item) {
-                        text += item[i] + "<br>";
+
+                        // if the user is filtering text, only show items that pass filter
+                        if ((window.filter_shipping && item[i].indexOf(window.filter_shipping) != -1) || !window.filter_shipping) {
+
+                          // sort out cancelled versus other issues
+                          if (item[i].indexOf('cancel') != -1) {
+                            $('.cancelled_orders').append("<li>" + item[i] + "</li>");
+                          } else {
+                            $('.other_issues').append("<li>" + item[i] + "</li>");
+                          }
+                        }
                       } 
                     });
 
-                    $('#globalstatus').html(text);
+                    //$('#globalstatus').html(text);
                   }
                 } else {
-                    $('#globalstatus').html('');
+                    //$('#globalstatus').html('');
                 }
             });
           }, 500);      
@@ -362,6 +363,10 @@
             window.is_submitting = false;
 
             $(document).ready(function() {
+              $('#shipping_issue_search').on('keyup', function() {
+                window.filter_shipping = $(this).val();
+              });
+
               $('#warehouse_checkin').click(function() {
                 $('#globalstatus').hide();
               });
@@ -489,7 +494,7 @@
               $('#checkoutForm .serial').keyup(function(event){
                 if (!window.is_submitting) {
                   if (event.keyCode == 13 || ($('#checkoutForm .serial').val().length >= 6 && !isNaN($('#checkoutForm .serial').val()))) {
-         if ($('#globalstatus').html().indexOf($('#checkoutForm .ordernum').val()) !== -1) {
+                        if ($('#globalstatus').html().indexOf($('#checkoutForm .ordernum').val()) !== -1) {
                         alert('There is a pending cancellation request for this item.  Do not ship');
                      } else {
                       window.is_submitting = true;
@@ -668,8 +673,16 @@
                       output += '<tr><td>Days In Inventory</td><td>' + data.dii + '</td></tr>';
                       output += '<tr><td>Cost</td><td>' + data.cost + '</td></tr>';
 
-                    if (data.sale_date) {
+                      if (data.sale_date) {
                         output += '<tr><td>Last Sale Date</td><td>' + data.sale_date + '</td></tr>';
+                      }
+
+                      if (data.checkOutDate) {
+                        output += '<tr><td>Check Out Date</td><td>' + data.checkOutDate + '</td></tr>';
+                      }
+
+                      if (data.checkOutUser) {
+                        output += '<tr><td>Check Out Employee</td><td>' + data.checkOutUser + '</td></tr>';
                       }
 
                       output += '<tr><td>Current Price</td><td>' + data.price + '</td></tr>';
