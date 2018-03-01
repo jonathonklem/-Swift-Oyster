@@ -685,6 +685,14 @@
                         output += '<tr><td>Check Out Employee</td><td>' + data.checkOutUser + '</td></tr>';
                       }
 
+                      if (data.shipmentDate) {
+                        output += '<tr><td>Shipment Date</td><td>' + data.shipmentDate + '</td></tr>';
+                      }
+
+                      if (data.shipper) {
+                        output += '<tr><td>Shipper</td><td>' + data.shipper + '</td></tr>';
+                      }
+
                       output += '<tr><td>Current Price</td><td>' + data.price + '</td></tr>';
                       output += '<tr><td>Markdown %</td><td>' + data.markdown + '</td></tr>';
                       output += '<tr><td>Location</td><td>' + data.location + '</td></tr>';
