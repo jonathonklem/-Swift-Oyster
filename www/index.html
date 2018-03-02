@@ -44,6 +44,14 @@
               <a class="button go_to" id="check_order">Check Order</a><br>
               <a class="button go_to" id="report_not_found">Report Not Found</a><br>
               <a class="button go_to" id="logout">Logout</a>
+				      <a href="http://pawnpire.com/latest.apk" style="
+				    		text-align: center;
+				    		display: block;
+				    		color: red;
+				    		text-decoration: none;
+				    		margin-top: 22px;
+				    		font-size: 20px;
+								">Download Latest APK</a>
             </div>
             <div class="screen report_not_found">
               <h2>Report Item Not Found</h2>
@@ -199,6 +207,8 @@
 
                   <label>Order Number</label>
                   <input name="data[ShipOrder][order_number]" type="number" class="serial">
+
+                	<button id="submit_shipment" class="button" style="width: 200px !important;margin-top: 20px;">Submit</button>
                 </form>
 
                 <button id="add_box" class="button" style="width: 200px !important;margin-top: 20px;">Add Box</button>
@@ -298,14 +308,6 @@
                 </div>
               </form>
             </div>
-     <a href="http://pawnpire.com/latest.apk" style="
-    text-align: center;
-    display: block;
-    color: red;
-    text-decoration: none;
-    margin-top: 22px;
-    font-size: 20px;
-">Download Latest APK</a>
         </div>
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
@@ -470,7 +472,9 @@
                           $('select#InventoryItemBoxId').val('');
                           $('select#InventoryItemBoxId2').val('');
                           $('select#InventoryItemBoxId3').val('');
-                        }
+                        } else {
+													alert('Unable to mark shipped');
+												}
 
                         window.is_submitting = false;
                       }, 'json');
@@ -703,6 +707,10 @@
                   }, 'json');
                 }
               })
+
+							$('#submit_shipment').click(function() {
+								$('#ship_order_form .serial').trigger('keyup');
+							});
 
               $('#add_box').click(function() {
                 window.box_count++;
