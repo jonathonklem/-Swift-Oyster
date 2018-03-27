@@ -34,6 +34,7 @@
             <div class="screen menu">
               <h2>Choose Task</h2>
               <a class="button go_to" id="warehouse_checkin">Warehouse Checkin</a><br>
+              <a class="button go_to" id="create_invoice">Create Invoice</a><br>
               <a class="button go_to" id="shipping_issues">Shipping Issues</a><br>
               <a class="button go_to" id="relist">Relist</a><br>
               <a class="button go_to" id="checkout">Checkout</a><br>
@@ -44,14 +45,14 @@
               <a class="button go_to" id="check_order">Check Order</a><br>
               <a class="button go_to" id="report_not_found">Report Not Found</a><br>
               <a class="button go_to" id="logout">Logout</a>
-				      <a href="http://pawnpire.com/latest.apk" style="
-				    		text-align: center;
-				    		display: block;
-				    		color: red;
-				    		text-decoration: none;
-				    		margin-top: 22px;
-				    		font-size: 20px;
-								">Download Latest APK</a>
+              <a href="http://pawnpire.com/latest.apk" style="
+                text-align: center;
+                display: block;
+                color: red;
+                text-decoration: none;
+                margin-top: 22px;
+                font-size: 20px;
+                ">Download Latest APK</a>
             </div>
             <div class="screen report_not_found">
               <h2>Report Item Not Found</h2>
@@ -208,7 +209,7 @@
                   <label>Order Number</label>
                   <input name="data[ShipOrder][order_number]" type="number" class="serial">
 
-                	<button id="submit_shipment" class="button" style="width: 200px !important;margin-top: 20px;">Submit</button>
+                  <button id="submit_shipment" class="button" style="width: 200px !important;margin-top: 20px;">Submit</button>
                 </form>
 
                 <button id="add_box" class="button" style="width: 200px !important;margin-top: 20px;">Add Box</button>
@@ -278,6 +279,21 @@
                   <input name="data[InventoryItem][child_serial]" type="text" class="serial child">
                 </form>
               </div>
+            </div>
+            <div class="screen create_invoice">
+              <h2>Create Invoice</h2>
+
+              <form id='createInvoice' action='' method='post'>
+                <div class="input_block">
+                  <label>Add Items to Invoice #<span class="invoice_number"></span></label>
+                  <label>Serial</label>
+                  <input name="data[InventoryItem][id]" type="text" class="serial">
+                  <input name="data[Invoice][id]" type="hidden" id="invoiceId">
+
+                  <button id="finish_invoice" class="button" style="width: 240px !important;margin-top: 20px;">Finish Invoice</button>
+                </div>
+
+              </form>
             </div>
             <div class="screen warehouse_checkin">
               <h2>Warehouse Checkin</h2>
@@ -357,14 +373,25 @@
                     //$('#globalstatus').html('');
                 }
             });
-          }, 500);      
+          }, 10000);      
         </script>
         <script type="text/javascript">
             app.initialize();
 
             window.is_submitting = false;
+            var version = '0.1.0';
 
             $(document).ready(function() {
+              // fetch the latest version
+              //  TODO: FINISH THIS
+
+              $('#create_invoice').click(function() {
+                $.post('https://www.pawnpire.com/assistant/create_invoice', $('#UserLoginForm').serialize(), function(data) {
+                  $('.invoice_number').html(data.invoice_id);
+                  $('#invoiceId').val(data.invoice_id);
+                }, 'json');
+              });
+
               $('#shipping_issue_search').on('keyup', function() {
                 window.filter_shipping = $(this).val();
               });
@@ -418,9 +445,33 @@
                 }
               });
 
-              $('#warehouseCheckinForm').on('submit', function(e) {
+              $('#warehouseCheckinForm, #createInvoice').on('submit', function(e) {
                 e.preventDefault();
                 return false;
+              });
+
+
+              $('#createInvoice .serial').keyup(function(event) {
+                event.preventDefault();
+                if (event.keyCode == 13 || ($('#createInvoice .serial').val().length >= 6 && !isNaN($('#createInvoice .serial').val())) && !window.is_submitting) {
+                  window.is_submitting = true;
+                  event.preventDefault();
+
+                  $.post('https://www.pawnpire.com/assistant/add_to_invoice', localStorage.getItem('credentials') + '&' + $('#createInvoice').serialize(), function(data) {
+                    if (data.success) {
+                      alert('item added');
+                      $('#createInvoice .serial').val('');
+                    }
+                    window.is_submitting = false;
+                  }, 'json');
+                }
+              });
+
+              $('#finish_invoice').click(function() {
+                $.post('https://www.pawnpire.com/assistant/finalize_invoice', localStorage.getItem('credentials') + '&' + $('#createInvoice').serialize(), function(data) {
+                  $('#invoiceId').val('');
+                  transition('menu');
+                }, 'json');
               });
 
               $('#notFoundForm .serial').keyup(function(event) {
@@ -473,8 +524,8 @@
                           $('select#InventoryItemBoxId2').val('');
                           $('select#InventoryItemBoxId3').val('');
                         } else {
-													alert('Unable to mark shipped');
-												}
+                          alert('Unable to mark shipped');
+                        }
 
                         window.is_submitting = false;
                       }, 'json');
@@ -708,9 +759,9 @@
                 }
               })
 
-							$('#submit_shipment').click(function() {
-								$('#ship_order_form .serial').trigger('keyup');
-							});
+              $('#submit_shipment').click(function() {
+                $('#ship_order_form .serial').trigger('keyup');
+              });
 
               $('#add_box').click(function() {
                 window.box_count++;
