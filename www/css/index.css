@@ -173,3 +173,8 @@ div#check_order_form_response {
     color: white;
     padding: 20px;
 }
+textarea.message {
+    height: 100px;
+    width: 66%;
+    font-size: 45px;
+}
