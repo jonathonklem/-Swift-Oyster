@@ -515,7 +515,7 @@
               $('#ship_order_form .serial').keyup(function(event){
                 if (!window.is_submitting) {
                   if ($(this).val().length > 4) {
-                    if ($('#globalstatus').html().indexOf($('#ship_order_form .serial').val()) !== -1) {
+                    if ($('#globalstatus').html().indexOf(" " + $('#ship_order_form .serial').val()) !== -1) {
                       alert('There is a pending cancellation request for this item.  Do not ship');
                     } else {
                       window.is_submitting = true;
