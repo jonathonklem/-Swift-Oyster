@@ -283,6 +283,7 @@
 
                   <br><br><br><a href='#' onclick="$('#enterChildInfo').hide();$('#getParent').show();$('#relistFormParent').show();return false;" style="color: #c4942f; font-size:22px;">Go Back</a>
                 </form>
+                <a href='#' onclick="$('#enterChildInfo').hide();$('#relistFormParent').show();$('#relistFormParent .serial').val('');">Go Back</a>
               </div>
             </div>
             <div class="screen create_invoice">
@@ -308,13 +309,15 @@
                   <label>Disposition</label>
                   <select name="data[InventoryItem][warehouse_disposition]" class="disposition">
                     <option>Choose</option>
-                    <option value="Ready to List">Ready to List</option>
-                    <option value="Medical">Medical</option>
-                    <option value="Return to Retail">Return to Retail</option>
-                    <option value="In House">In House</option>
                     <option value="Counterfeit">Counterfeit</option>
+                    <option value="Gift Card">Gift Card</option>
+                    <option value="In House">In House</option>
+                    <option value="Medical">Medical</option>
+                    <option value="Ready to List">Ready to List</option>
                     <option value="Relist">Relist</option>
+                    <option value="Return to Retail">Return to Retail</option>
                     <option value="Sports Needs Authentication">Sports Needs Authentication</option>
+                    <option value="Vault Room">Vault Room</option>
                   </select>
                 </div>
 
