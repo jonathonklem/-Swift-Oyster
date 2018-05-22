@@ -45,6 +45,7 @@
               <a class="button go_to" id="check_order">Check Order</a><br>
               <a class="button go_to" id="report_not_found">Report Not Found</a><br>
               <a class="button go_to" id="add_to_audit_group">Add To Audit Group</a><br>
+              <a class="button go_to" id="create_audit_group">Create Audit Group</a><br>
               <a class="button go_to" id="logout">Logout</a>
               <a href="http://pawnpire.com/latest.apk" style="
                 text-align: center;
@@ -54,6 +55,15 @@
                 margin-top: 22px;
                 font-size: 20px;
                 ">Download Latest APK</a>
+            </div>
+            <div class="screen create_audit_group">
+              <h2>Create Audit Group</h2>
+              <div class="enter_serial">
+                <form id="audit_group_add" onsubmit="return false">
+                  <label>Audit Group Name</label>
+                  <input name="data[AuditGroup][name]" class="serial" type="text">
+                </form>
+              </div>
             </div>
             <div class="screen add_to_audit_group">
               <h2>Add To Audit Group</h2>
@@ -414,6 +424,7 @@
                 }, 'json');
               });
 
+
               $('#shipping_issue_search').on('keyup', function() {
                 window.filter_shipping = $(this).val();
               });
@@ -484,6 +495,24 @@
               $('#warehouseCheckinForm, #createInvoice').on('submit', function(e) {
                 e.preventDefault();
                 return false;
+              });
+
+              $('#audit_group_add .serial').keyup(function(event) {
+                event.preventDefault();
+                if (event.keyCode == 13) {
+                  window.is_submitting = true;
+                  event.preventDefault();
+
+                  $.post('https://www.pawnpire.com/assistant/create_audit_group', localStorage.getItem('credentials') + '&' + $('#audit_group_add').serialize(), function(data) {
+                    if (data.success) {
+                      alert('audit group created');
+                      $('#audit_group_add .serial').val('');
+                    } else {
+                      alert('an error occured');
+                    }
+                    window.is_submitting = false;
+                  }, 'json');
+                }
               });
 
               $('#audit_group .serial').keyup(function(event) {
