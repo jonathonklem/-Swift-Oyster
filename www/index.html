@@ -44,6 +44,7 @@
               <a class="button go_to" id="ship_order">Ship Order</a><br>
               <a class="button go_to" id="check_order">Check Order</a><br>
               <a class="button go_to" id="report_not_found">Report Not Found</a><br>
+              <a class="button go_to" id="add_to_audit_group">Add To Audit Group</a><br>
               <a class="button go_to" id="logout">Logout</a>
               <a href="http://pawnpire.com/latest.apk" style="
                 text-align: center;
@@ -53,6 +54,18 @@
                 margin-top: 22px;
                 font-size: 20px;
                 ">Download Latest APK</a>
+            </div>
+            <div class="screen add_to_audit_group">
+              <h2>Add To Audit Group</h2>
+              <div class="enter_serial">
+                <form id="audit_group" onsubmit="return false">
+                  <label>Audit Group</label>
+                  <select name="data[AuditGroupsInventoryItem][audit_group_id]" id="audit_groups" style="height: 63px;width: 66%;font-size: 45px;"></select>
+
+                  <label>Serial Number</label>
+                  <input name="data[AuditGroupsInventoryItem][inventory_item_id]" class="serial" type="text">
+                </form>
+              </div>
             </div>
             <div class="screen report_not_found">
               <h2>Report Item Not Found</h2>
@@ -390,6 +403,7 @@
             var version = '0.1.0';
 
             $(document).ready(function() {
+              // fetch a list of audit groups
               // fetch the latest version
               //  TODO: FINISH THIS
 
@@ -428,6 +442,20 @@
                     // store credentials
                     localStorage.setItem('credentials', $('#UserLoginForm').serialize());
 
+                    $.post('https://www.pawnpire.com/assistant/get_audit_groups', localStorage.getItem('credentials') + '&' + $('#audit_group').serialize(), function(data) { 
+                      var results = [];
+                      for (var i in data) { 
+                         results.push([i, data[i]]);
+                      }
+
+                      $(results).each(function(id, name) {
+                        info = name.toString().split(',');
+                        $('#audit_group select').append('<option value="' + info[0] + '">' + info[1] + '</option>')
+                        console.log(id + " - " + name);
+                      });
+                    }, 'json');
+
+
                     setTimeout(function() {
                       transition('menu');
                     }, 500);
@@ -458,6 +486,23 @@
                 return false;
               });
 
+              $('#audit_group .serial').keyup(function(event) {
+                event.preventDefault();
+                if (event.keyCode == 13) {
+                  window.is_submitting = true;
+                  event.preventDefault();
+
+                  $.post('https://www.pawnpire.com/assistant/add_to_audit', localStorage.getItem('credentials') + '&' + $('#audit_group').serialize(), function(data) {
+                    if (data.success) {
+                      alert('item added');
+                      $('#audit_group .serial').val('');
+                    } else {
+                      alert('an error occured');
+                    }
+                    window.is_submitting = false;
+                  }, 'json');
+                }
+              });
 
               $('#createInvoice .serial').keyup(function(event) {
                 event.preventDefault();
