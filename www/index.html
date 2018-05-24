@@ -44,6 +44,7 @@
               <a class="button go_to" id="ship_order">Ship Order</a><br>
               <a class="button go_to" id="check_order">Check Order</a><br>
               <a class="button go_to" id="report_not_found">Report Not Found</a><br>
+              <a class="button go_to" id="check_for_pull">Check For Pull</a><br>
               <a class="button go_to" id="add_to_audit_group">Add To Audit Group</a><br>
               <a class="button go_to" id="create_audit_group">Create Audit Group</a><br>
               <a class="button go_to" id="logout">Logout</a>
@@ -55,6 +56,16 @@
                 margin-top: 22px;
                 font-size: 20px;
                 ">Download Latest APK</a>
+            </div>
+            <div class="screen check_for_pull">
+              <h2>Check Serial</h2>
+              <div class="enter_serial">
+                <form id="check_serial" onsubmit="return false">
+                  <label>Serial</label>
+                  <input name="data[PullList][inventory_item_id]" class="serial" type="text">
+                </form>
+              </div>
+              <div id="pull_status"></div>
             </div>
             <div class="screen create_audit_group">
               <h2>Create Audit Group</h2>
@@ -72,7 +83,7 @@
                   <label>Audit Group</label>
                   <select name="data[AuditGroupsInventoryItem][audit_group_id]" id="audit_groups" style="height: 63px;width: 66%;font-size: 45px;"></select>
 
-                  <label>Serial Number</label>
+                  <label>Serial Number/Custom Label</label>
                   <input name="data[AuditGroupsInventoryItem][inventory_item_id]" class="serial" type="text">
                 </form>
               </div>
@@ -495,6 +506,26 @@
               $('#warehouseCheckinForm, #createInvoice').on('submit', function(e) {
                 e.preventDefault();
                 return false;
+              });
+
+              $('#check_serial .serial').keyup(function(event) {
+                event.preventDefault();
+                if (event.keyCode == 13) {
+                  window.is_submitting = true;
+                  
+                  $('#pull_status').html('');
+
+                  $.post('https://www.pawnpire.com/assistant/check_pull', localStorage.getItem('credentials') + '&' + $('#check_serial').serialize(), function(data) {
+                    if (data.status == 'pull') {
+                      $('#pull_status').html('<h3 style="text-align: center; font-size: 30px; color: #CC0000;">PULL</h3>');
+                    } else {
+                      $('#pull_status').html('<h3 style="text-align: center; font-size: 30px; color: #00CC00;">LEAVE</h3>');
+                    }
+
+                    window.is_submitting = false;
+                  }, 'json');
+                }
+
               });
 
               $('#audit_group_add .serial').keyup(function(event) {
