@@ -834,11 +834,27 @@
                       output = '<table border=0 cellspacing=0 cellpadding=10 style="color: white;width: 90%;margin: auto;text-align: left; font-size:23px;">';
               
                       if (data.ebayLink) {
-                        output += '<tr><td>Ebay Listing</td><td><a href="' + data.ebayLink + '" style="color:white !important;">Click Here</a></td></tr>';
+                        output += '<tr><td>Ebay Listing</td><td>LISTED <a href="' + data.ebayLink + '" style="color:white !important;">Click Here</a></td></tr>';
                       } else {
                         output += '<tr><td>Ebay Listing</td><td><a href="#" style="color:red;text-decoration:none">NOT FOUND</a></td></tr>';
                       }
+
+                      if (data.ebayListingDate) {
+                        output += '<tr><td>Ebay listing Date</td><td>' + data.ebayListingDate + '</td></tr>';
+                      }
+
+                      if (data.warehouseCheckin) {
+                        output += '<tr><td>Warehouse Checkin Date</td><td>' + data.warehouseCheckin + '</td></tr>';
+                      }
               
+                      if (data.warehouseCheckUser) {
+                        output += '<tr><td>Warehouse Checkin User</td><td>' + data.warehouseCheckUser + '</td></tr>';
+                      }
+
+                      if (data.warehouseCheckDisp) {
+                        output += '<tr><td>Warehouse Checkin Disp.</td><td>' + data.warehouseCheckDisp + '</td></tr>';
+                      }
+
                       output += '<tr><td>Days In Inventory</td><td>' + data.dii + '</td></tr>';
                       output += '<tr><td>Cost</td><td>' + data.cost + '</td></tr>';
 
