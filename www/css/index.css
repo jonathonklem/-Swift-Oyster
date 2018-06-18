@@ -179,7 +179,7 @@ textarea.message {
     font-size: 45px;
 }
 
-@media (max-width: 900px) {
+@media (min-width: 900px) {
   * {
     font-size: 40px !important;
   }
