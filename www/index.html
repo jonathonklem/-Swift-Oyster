@@ -93,7 +93,7 @@
               <div class="enter_serial">
                 <form id="notFoundForm" onsubmit="return false">
                   <label>Order ID</label>
-                  <input name="data[Issue][order_id]" style="height: 40px; width: 66%; font-size: 45px;" type="text">
+                  <input name="data[Issue][order_id]" style="height: 40px; width: 66%; font-size: 45px;" type="number">
 
                   <label>Note</label>
                   <textarea name="data[Issue][message]" class="message"></textarea>
@@ -118,7 +118,7 @@
               <div class="enter_serial">
                 <form id="check_order_form" onsubmit="return false;">
                   <label>Order Number</label>
-                  <input name="data[EbayOrder][sales_record_number]" type="text" class="serial">
+                  <input name="data[EbayOrder][sales_record_number]" type="number" class="serial">
                   <div id="check_order_form_response"></div>
                 </form>
               </div>
@@ -288,7 +288,7 @@
               <h2>Checkout</h2>
               <form id="checkoutForm" onsubmit="return false">
                 <label>Ebay Order Number</label>
-                <input name="data[InventoryItem][ebay_order_number]" class="ordernum" type="text" style="height: 40px; width: 66%; font-size: 45px;">
+                <input name="data[InventoryItem][ebay_order_number]" class="ordernum" type="number" style="height: 40px; width: 66%; font-size: 45px;">
 
                 <label>Serial</label>
                 <input name="data[InventoryItem][id]" type="text" class="serial">
