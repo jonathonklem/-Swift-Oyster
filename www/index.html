@@ -37,6 +37,7 @@
               <a class="button go_to" id="create_invoice">Create Invoice</a><br>
               <a class="button go_to" id="shipping_issues">Shipping Issues</a><br>
               <a class="button go_to" id="relist">Relist</a><br>
+              <a class="button go_to" id="check_shipping">Check Shipping</a><br>
               <a class="button go_to" id="checkout">Checkout</a><br>
               <a class="button go_to" id="uncheckout">Uncheckout</a><br>
               <a class="button go_to" id="audit">Audit</a><br>
@@ -57,6 +58,15 @@
                 margin-top: 22px;
                 font-size: 20px;
                 ">Download Latest APK</a>
+            </div>
+            <div class="screen check_shipping">
+              <h2>Check Shipping</h2>
+              <div class="enter_serial">
+                <form id="check_shipping_form" onsubmit="return false">
+                  <label>Ebay Order #</label>
+                  <input class="serial" type="text">
+                </form>
+              </div>
             </div>
             <div class="screen check_for_pull">
               <h2>Check Serial</h2>
@@ -551,11 +561,28 @@
 
               });
 
+              $('#check_shipping_form .serial').keyup(function(event) {
+                event.preventDefault();
+                if (event.keyCode == 13) {
+                  window.is_submitting = true;
+                  $.post('https://www.pawnpire.com/assistant/shipping_status/' + $(this).val(), localStorage.getItem('credentials'), function(data) {
+                    window.is_submitting = false;
+                    $('#check_shipping_form .serial').val('');
+                    if (data.shipped) {
+                      alert('This was shipped on ' + data.date + ' by ' + data.ship_by);
+                    } else {
+                      alert("There is no shipping info for this item");
+                    } 
+                  }, 'json');
+                }
+              });
+
               $('#flea_market_sale .price').keyup(function(event) {
                 event.preventDefault();
                 if (event.keyCode == 13) {
                   window.is_submitting = true;
                   $.post('https://www.pawnpire.com/assistant/mark_flea_sold', localStorage.getItem('credentials') + '&' + $('#flea_market_sale').serialize(), function(data) {
+                    window.is_submitting = false;
                     $('#flea_market_sale')[0].reset();
                     alert('Recorded');
                   }, 'json');
