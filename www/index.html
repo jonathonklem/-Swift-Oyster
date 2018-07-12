@@ -40,6 +40,7 @@
               <a class="button go_to" id="check_shipping">Check Shipping</a><br>
               <a class="button go_to" id="checkout">Checkout</a><br>
               <a class="button go_to" id="uncheckout">Uncheckout</a><br>
+              <a class="button go_to" id="audit_project">July Audit Project</a><br>
               <a class="button go_to" id="audit">Audit</a><br>
               <a class="button go_to" id="find_locations">Find Locations</a><br>
               <a class="button go_to" id="ship_order">Ship Order</a><br>
@@ -58,6 +59,22 @@
                 margin-top: 22px;
                 font-size: 20px;
                 ">Download Latest APK</a>
+            </div>
+            <div class="screen audit_project">
+              <h2>July Audit Project</h2>
+              <div class="enter_serial">
+                <form id="audit_project_form" onsubmit="return false;">
+                  <label>Serial</label>
+                  <input class="serial" type="text"><br><br>
+                  <button id="serial_audit_projct_submit" class="button">Search</button> 
+                  <div class="location" style="display: none">
+                    <label>Location</label> 
+                    <input class="location_input" type="text" style="height: 40px; width: 66%; font-size: 45px;"><br>
+                    <em style="color: red;max-width: 80%;display: block;margin: auto;margin-top: 20px;margin-bottom: 20px;">Please confirm this location is accurate and hit submit to add this item to the audit group</em>
+                    <button id="submit_audit_project_form" class="button">Submit</button> 
+                  </div>
+                </form>
+              </div> 
             </div>
             <div class="screen check_shipping">
               <h2>Check Shipping</h2>
@@ -538,6 +555,31 @@
               $('#warehouseCheckinForm, #createInvoice').on('submit', function(e) {
                 e.preventDefault();
                 return false;
+              });
+
+              $('#serial_audit_projct_submit').click(function(event) {
+                $('#audit_project_form .location').hide();
+                $('#audit_project_form .location_input').val('');
+
+                $.post('https://www.pawnpire.com/assistant/get_location/' + $('#audit_project_form .serial').val(),  localStorage.getItem('credentials'), function(data) {
+                  if (data.success) {
+                    $('#audit_project_form .location').show();
+                    $('#audit_project_form .location_input').val(data.location); 
+                  } else {
+                    alert("Unable to find serial number");
+                  }
+                }, 'json');
+              });
+
+              $('#submit_audit_project_form').click(function() {
+                $.post('https://www.pawnpire.com/assistant/add_july/' + $('#audit_project_form .serial').val() + '/' + $('#audit_project_form .location_input').val(),  localStorage.getItem('credentials'), function(data) {
+                  // do something with this
+                  $('#audit_project_form .location').hide();
+                  $('#audit_project_form .location_input').val('');
+                  $('#audit_project_form .serial').val('');
+                  alert("Added successfully");
+                }, 'json');
+              
               });
 
               $('#check_serial .serial').keyup(function(event) {
