@@ -50,6 +50,7 @@
               <a class="button go_to" id="add_to_audit_group">Add To Audit Group</a><br>
               <a class="button go_to" id="create_audit_group">Create Audit Group</a><br>
               <a class="button go_to" id="flea_market">Record Flea Market</a><br>
+              <a class="button go_to" id="check_pallet">Check Pallet</a><br>
               <a class="button go_to" id="logout">Logout</a>
               <a href="http://pawnpire.com/latest.apk" style="
                 text-align: center;
@@ -59,6 +60,17 @@
                 margin-top: 22px;
                 font-size: 20px;
                 ">Download Latest APK</a>
+            </div>
+            <div class="screen check_pallet">
+              <h2>Check Pallet</h2>
+              <div class="enter_serial">
+                <form id="check_pallet_form" onsubmit="return false;">
+                  <label>Pallet Number</label>
+                  <input class="serial" type="text"><br><br>
+                  <div id="pallet_contents" style="color: white;padding:15px;">
+                  </div>
+                </form>
+              </div>
             </div>
             <div class="screen audit_project">
               <h2>July Audit Project</h2>
@@ -484,6 +496,17 @@
                 }, 'json');
               });
 
+              $('body').on('click', '.mark_received', function(e) {
+                e.preventDefault();
+                count = prompt('How many?');
+                var element = $(this);
+
+                $.get('https://www.pawnpire.com/manifests/mark_received/' + $(this).data('manifest_line') + '/' + count + '/' + $('#UserUsername').val(), function(data) {
+                  alert(count + ' marked received');
+                  console.log(data.amount);
+                  element.html(data.amount);
+                }, 'json');
+              });
 
               $('#shipping_issue_search').on('keyup', function() {
                 window.filter_shipping = $(this).val();
@@ -909,6 +932,27 @@
                   $('.internal_notes').hide();
                 }
               })
+
+              $('#check_pallet_form .serial').keyup(function(event) {
+                if (event.keyCode == 13) {
+                  event.preventDefault();
+                  $.get('https://www.pawnpire.com/manifests/get_pallet_contents/' + $('#check_pallet_form .serial').val(), function(data) {
+                    $('#pallet_contents').html('');
+
+                    if (!data) {
+                      $('#pallet_contents').html('<span color="red">No pallet found</span>');
+                    } else {
+                      content = "<table border=0 cellspacing=0 cellpadding=0><tr><td>Item</td><td>Qty Shipped</td><td>Qty Rcvd</td></tr>";
+                      $.each(data, function(index, value) {
+                        content += "<tr><td>" + value.ManifestLine.model_name + "</td><td> " + value.ManifestLine.total_quantity + "</td><td><a href='#' class='mark_received' data-manifest_line='" + value.ManifestLine.id + "'>" + value.ManifestLine.amount_checked_in + "</a></td></tr>";
+                      });
+
+                      content += "</table>";
+                      $('#pallet_contents').html(content);
+                    }
+                  }, 'json');
+                }
+              });
 
               $('#location_serial .serial').keyup(function(event) {
                 if (event.keyCode == 13 || ($('#location_serial .serial').val().length >= 6 && !isNaN($('#location_serial .serial').val()))) {
