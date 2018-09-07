@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <!-- test -->
         <meta charset="utf-8" />
         <meta name="format-detection" content="telephone=no" />
         <meta name="msapplication-tap-highlight" content="no" />
@@ -638,7 +639,7 @@
                 $.get('https://www.pawnpire.com/manifests/price_check/' + $('#check_upc_cost_form .serial').val(), function(data) {
                   if (data.cost) {
                     $('#check_upc_cost_form .serial').val('');
-                    alert(data.cost);
+                    alert("Cost: " + data.cost + " Retail: " + data.retail);
                   } else {
                     alert('could not find cost');
                   }
