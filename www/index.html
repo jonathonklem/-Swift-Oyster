@@ -51,6 +51,8 @@
               <a class="button go_to" id="create_audit_group">Create Audit Group</a><br>
               <a class="button go_to" id="flea_market">Record Flea Market</a><br>
               <a class="button go_to" id="check_pallet">Check Pallet</a><br>
+              <a class="button go_to" id="check_upc_cost">Check Cost</a><br>
+              <a class="button go_to" id="pallet_location">Check In Pallet Item</a><br>
               <a class="button go_to" id="logout">Logout</a>
               <a href="http://pawnpire.com/latest.apk" style="
                 text-align: center;
@@ -60,6 +62,32 @@
                 margin-top: 22px;
                 font-size: 20px;
                 ">Download Latest APK</a>
+            </div>
+            <div class="screen check_upc_cost">
+              <h2>Check Cost</h2>
+              <div class="enter_serial">
+                <form id="check_upc_cost_form" onsubmit="return false;">
+                  <label>UPC</label>
+                  <input class="serial" type="text"><br>
+                  <button id="submit_upc_cost_check" class="button">Submit</button> 
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div class="screen pallet_location">
+              <h2>Check Pallet</h2>
+              <div class="enter_serial">
+                <form id="pallet_location_form" onsubmit="return false;">
+                  <label>UPC</label>
+                  <input class="serial" type="text"><br>
+                  <label>Location</label>
+                  <input class="upc_location" type="text" style="height: 40px; width: 66%; font-size: 45px;"><br>
+                  <label>Amount</label>
+                  <input class="upc_amount" type="text" style="height: 40px; width: 66%; font-size: 45px;"><br><br><br>
+                  <button id="submit_upc_location" class="button">Submit</button> 
+                  </div>
+                </form>
+              </div>
             </div>
             <div class="screen check_pallet">
               <h2>Check Pallet</h2>
@@ -603,6 +631,26 @@
                   alert("Added successfully");
                 }, 'json');
               
+              });
+
+              $('#submit_upc_cost_check').click(function(event) {
+                event.preventDefault();
+                $.get('https://www.pawnpire.com/manifests/price_check/' + $('#check_upc_cost_form .serial').val(), function(data) {
+                  if (data.cost) {
+                    $('#check_upc_cost_form .serial').val('');
+                    alert(data.cost);
+                  } else {
+                    alert('could not find cost');
+                  }
+                }, 'json');
+              });
+
+              $('#submit_upc_location').click(function(event) {
+                event.preventDefault();
+                $.get('https://www.pawnpire.com/manifests/document_location/' + $('#pallet_location_form .serial').val() + '/' + $('.upc_amount').val() + '/' + $('.upc_location').val() + '/' + $('#UserUsername').val(), function(data) {
+                  $('.upc_amount').val('');
+                  $('.upc_location').val('');
+                }, 'json');
               });
 
               $('#check_serial .serial').keyup(function(event) {
