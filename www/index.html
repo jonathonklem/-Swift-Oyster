@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <!-- test -->
         <meta charset="utf-8" />
         <meta name="format-detection" content="telephone=no" />
         <meta name="msapplication-tap-highlight" content="no" />
@@ -54,6 +53,7 @@
               <a class="button go_to" id="check_pallet">Check Pallet</a><br>
               <a class="button go_to" id="check_upc_cost">Check Cost</a><br>
               <a class="button go_to" id="pallet_location">Check In Pallet Item</a><br>
+              <a class="button go_to" id="create_warehouse_bin">Create Warehouse Bin</a><br>
               <a class="button go_to" id="logout">Logout</a>
               <a href="http://pawnpire.com/latest.apk" style="
                 text-align: center;
@@ -63,6 +63,21 @@
                 margin-top: 22px;
                 font-size: 20px;
                 ">Download Latest APK</a>
+            </div>
+            <div class="screen create_warehouse_bin">
+              <h2>Create Warehouse Bin</h2>
+              <div class="enter_serial">
+                <form id="check_upc_cost_form" onsubmit="return false;">
+                  <label>Bin ID</label>
+                  <input class="serial" type="text"><br>
+                  <label>Cost</label>
+                  <input class="bin_cost" type="text" style="height: 40px; width: 66%; font-size: 45px;"><br>
+                  <label>Estimate</label>
+                  <input class="bin_estimate" type="text" style="height: 40px; width: 66%; font-size: 45px;"><br>
+                  <button id="create_warehouse_bin_btn" class="button">Submit</button> 
+                  </div>
+                </form>
+              </div>
             </div>
             <div class="screen check_upc_cost">
               <h2>Check Cost</h2>
@@ -607,6 +622,22 @@
               $('#warehouseCheckinForm, #createInvoice').on('submit', function(e) {
                 e.preventDefault();
                 return false;
+              });
+
+              $('#create_warehouse_bin_btn').click(function(event) {
+                event.preventDefault();
+
+                $.post('https://www.pawnpire.com/assistant/create_bin/' + $('#check_upc_cost_form .serial').val() + '/' + $('#check_upc_cost_form .bin_cost').val() + '/' + $('#check_upc_cost_form .bin_estimate').val(), localStorage.getItem('credentials'), function(data) {
+                  if (data.success) {
+                    $('#check_upc_cost_form .serial').val('');
+                    $('#check_upc_cost_form .bin_cost').val('');
+                    $('#check_upc_cost_form .bin_estimate').val('')
+
+                    alert('Bin created successfully');
+                  } else {
+                    alert('Unable to create bin');
+                  }
+                }, 'json');
               });
 
               $('#serial_audit_projct_submit').click(function(event) {
