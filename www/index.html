@@ -52,6 +52,7 @@
               <a class="button go_to" id="flea_market">Record Flea Market</a><br>
               <a class="button go_to" id="check_pallet">Check Pallet</a><br>
               <a class="button go_to" id="check_upc_cost">Check Cost</a><br>
+              <a class="button go_to" id="list_to_amazon">List To Amazon</a><br>
               <a class="button go_to" id="pallet_location">Check In Pallet Item</a><br>
               <a class="button go_to" id="create_warehouse_bin">Create Warehouse Bin</a><br>
               <a class="button go_to" id="logout">Logout</a>
@@ -434,6 +435,18 @@
                   <button id="finish_invoice" class="button" style="width: 240px !important;margin-top: 20px;">Finish Invoice</button>
                 </div>
 
+              </form>
+            </div>
+            <div class="screen list_to_amazon">
+              <h2>List On Amazon</h2>
+              <form id="listAmazonForm" action="" method="post">
+                <div class="input_block">
+                  <label>UPC</label>
+                  <input name="data[InventoryItem][upc]" class="upc" type="number" style="height: 40px; width: 66%; font-size: 45px;"><br>
+                  <label>Serial</label>
+                  <input name="data[InventoryItem][id]" type="text" class="serial">
+                  <button id="submit_amazon" class="button" style="width: 440px !important;margin-top: 20px;">Add To Amazon</button>
+                </div>
               </form>
             </div>
             <div class="screen warehouse_checkin">
@@ -927,7 +940,12 @@
                   $.post('https://www.pawnpire.com/assistant/warehouse_checkin', localStorage.getItem('credentials') + '&' + $('#warehouseCheckinForm').serialize(), function(data) {
                     if ($('#warehouseCheckinForm .serial').val()) { 
                       if (data.response == 'success') {
-                        $('#status').html('<span style="color: #00BB00;">' + $('#warehouseCheckinForm .serial').val() + ' checked in</span>');
+                        if (data.message) {
+                          $('#status').html('<span style="color: #00BB00;">' + $('#warehouseCheckinForm .serial').val() + ' checked in<br>' + data.message + '</span>');
+                        } else {
+                          $('#status').html('<span style="color: #00BB00;">' + $('#warehouseCheckinForm .serial').val() + ' checked in</span>');
+                        }
+
                         $('#warehouseCheckinForm .serial').val('');
       $('#internal_notes').val('');
                       } else {
@@ -1046,6 +1064,16 @@
                     }
                   }, 'json');
                 }
+              });
+
+              $('#submit_amazon').click(function(event) {
+                event.preventDefault();
+
+                $.post('https://www.pawnpire.com/assistant/addAmazon', localStorage.getItem('credentials') + '&' + $('#listAmazonForm').serialize(), function(data) {
+                  if (data.response == 'success') {
+                    alert("added"); $('#listAmazonForm')[0].reset();
+                  }  else { alert("error"); }
+                }, "json");
               });
 
               $('#auditForm .serial').keyup(function(event) {
