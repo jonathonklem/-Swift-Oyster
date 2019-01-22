@@ -837,7 +837,7 @@
               });
 
               function submit_order() {
-                    if ($('#globalstatus').html().indexOf(" " + $('#ship_order_form .serial').val()) !== -1) {
+                    if ($('#globalstatus').html().indexOf(" " + $('#checkoutForm .serial').val()) !== -1) {
                       alert('There is a pending cancellation request for this item.  Do not ship');
                     } else {
                       window.is_submitting = true;
@@ -882,7 +882,7 @@
               $('#checkoutForm .serial').keyup(function(event){
                 if (!window.is_submitting) {
                   if (event.keyCode == 13 || ($('#checkoutForm .serial').val().length >= 6 && !isNaN($('#checkoutForm .serial').val()))) {
-                        if ($('#globalstatus').html().indexOf($('#checkoutForm .ordernum').val()) !== -1 && $('#checkoutForm .serial').val()) {
+                        if ($('#globalstatus').html().indexOf(" " + $('#checkoutForm .ordernum').val()) !== -1 && $('#checkoutForm .serial').val()) {
                         alert('There is a pending cancellation request for this item.  Do not ship');
                      } else {
                       window.is_submitting = true;
