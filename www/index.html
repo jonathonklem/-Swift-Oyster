@@ -879,6 +879,12 @@
                 }
               });
 
+              $('#checkoutForm .ordernum').keyup(function(event) {
+                if (event.keyCode == 13) {
+                  $('#checkoutForm .serial').focus();
+                }
+              });
+
               $('#checkoutForm .serial').keyup(function(event){
                 if (!window.is_submitting) {
                   if (event.keyCode == 13 || ($('#checkoutForm .serial').val().length >= 6 && !isNaN($('#checkoutForm .serial').val()))) {
@@ -902,6 +908,8 @@
                           if (data.response == 'success') {
                             $('#status').html($('#checkoutForm .serial').val() + ' checked out');
                             $('#checkoutForm input').val('');
+                            $('#checkoutForm .ordernum').focus();
+
                           } else if (data.response == 'select_child') {
                             if ($('#checkoutForm div').length) {
                               return; // if they double posted, don't worry about showing this again
