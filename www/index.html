@@ -880,7 +880,7 @@
               });
 
               $('#checkoutForm .ordernum').keyup(function(event) {
-                if (event.keyCode == 13) {
+                if (event.keyCode == 13 || $(this).val().length >= 6) {
                   $('#checkoutForm .serial').focus();
                 }
               });
